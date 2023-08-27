@@ -11,6 +11,7 @@ import { UserService } from './user.service';
 import { User } from 'src/schemas/user.schema';
 import { UserCreateDto } from 'src/dtos/user/user-create-dto';
 import { UserUpdateDto } from 'src/dtos/user/user-update-dto';
+import { ResponseData } from 'src/global/globalClass';
 
 @Controller('api/user')
 export class UserController {
@@ -22,25 +23,37 @@ export class UserController {
   }
 
   @Post()
-  create(@Body() newUser: UserCreateDto): Promise<User> {
-    return this.userService.create(newUser);
+  create(@Body() newUser: UserCreateDto): ResponseData<Promise<User>> {
+    return new ResponseData(
+      this.userService.create(newUser),
+      'User created',
+      201,
+    );
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<User> {
-    return this.userService.findOneById(id);
+  findOne(@Param('id') id: string): ResponseData<Promise<User>> {
+    return new ResponseData(
+      this.userService.findOneById(id),
+      'User found',
+      200,
+    );
   }
 
   @Put(':id')
   update(
     @Param('id') id: string,
     @Body() updateUser: UserUpdateDto,
-  ): Promise<User> {
-    return this.userService.update(id, updateUser);
+  ): ResponseData<Promise<User>> {
+    return new ResponseData(
+      this.userService.update(id, updateUser),
+      'User updated',
+      200,
+    );
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<User> {
-    return this.userService.delete(id);
+  remove(@Param('id') id: string): ResponseData<Promise<User>> {
+    return new ResponseData(this.userService.delete(id), 'User deleted', 200);
   }
 }

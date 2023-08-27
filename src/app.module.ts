@@ -13,7 +13,7 @@ import { DocsModule } from './docs/docs.module';
       isGlobal: true,
     }),
     MongooseModule.forRoot(
-      'mongodb+srv://vinhho3010:hoanhvinh@thesis-management.qjmymdx.mongodb.net/',
+      process.env.MONGO_URI_CLOUD || 'mongodb://localhost:27017/',
     ),
     AuthModule,
     UserModule,
@@ -22,9 +22,4 @@ import { DocsModule } from './docs/docs.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
-  constructor() {
-    console.log('AppModule loaded');
-    console.log('MONGO_URI', process.env.MONGO_URI_CLOUD);
-  }
-}
+export class AppModule {}
