@@ -1,3 +1,5 @@
+import { ClassModule } from './class/class.module';
+
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -18,6 +20,7 @@ import { DocsModule } from './docs/docs.module';
     AuthModule,
     UserModule,
     DocsModule,
+    ClassModule,
   ],
   controllers: [AppController],
   providers: [AppService],
