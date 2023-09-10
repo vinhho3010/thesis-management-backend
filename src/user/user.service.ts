@@ -1,7 +1,7 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UserCreateDto } from 'src/dtos/user/user-create-dto';
+import { UserUpdateDto } from 'src/dtos/user/user-update-dto';
 import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
@@ -18,21 +18,24 @@ export class UserService {
     return this.userModel.findById(id).exec();
   }
 
-  async create(user: UserCreateDto): Promise<User> {
+  async findAllByRole(role: string): Promise<User[]> {
+    return await this.userModel.find({ role: role }).exec();
+  }
+
+  async update(id: string, user: UserUpdateDto): Promise<User> {
     try {
-      const newUser = new this.userModel(user);
-      return newUser.save();
+      return this.userModel.findByIdAndUpdate(id, user);
     } catch (error) {
-      throw new HttpException(error, 409);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async update(id: string, user: User): Promise<User> {
-    return this.userModel.findByIdAndUpdate(id, user, { new: true });
-  }
-
   async delete(id: string): Promise<User> {
-    return this.userModel.findByIdAndRemove(id);
+    try {
+      return this.userModel.findByIdAndDelete(id);
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async findByEmail(email: string): Promise<User> {

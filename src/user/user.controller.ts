@@ -1,17 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from 'src/schemas/user.schema';
-import { UserCreateDto } from 'src/dtos/user/user-create-dto';
 import { UserUpdateDto } from 'src/dtos/user/user-update-dto';
-import { ResponseData } from 'src/global/globalClass';
 
 @Controller('api/user')
 export class UserController {
@@ -22,38 +12,26 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Post()
-  create(@Body() newUser: UserCreateDto): ResponseData<Promise<User>> {
-    return new ResponseData(
-      this.userService.create(newUser),
-      'User created',
-      201,
-    );
+  @Get(':role')
+  findAllByRole(@Param('role') role: string): Promise<User[]> {
+    return this.userService.findAllByRole(role);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): ResponseData<Promise<User>> {
-    return new ResponseData(
-      this.userService.findOneById(id),
-      'User found',
-      200,
-    );
+  findOne(@Param('id') id: string): Promise<User> {
+    return this.userService.findOneById(id);
   }
 
   @Put(':id')
   update(
     @Param('id') id: string,
     @Body() updateUser: UserUpdateDto,
-  ): ResponseData<Promise<User>> {
-    return new ResponseData(
-      this.userService.update(id, updateUser),
-      'User updated',
-      200,
-    );
+  ): Promise<User> {
+    return this.userService.update(id, updateUser);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): ResponseData<Promise<User>> {
-    return new ResponseData(this.userService.delete(id), 'User deleted', 200);
+  remove(@Param('id') id: string): Promise<User> {
+    return this.userService.delete(id);
   }
 }

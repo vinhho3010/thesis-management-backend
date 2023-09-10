@@ -1,6 +1,15 @@
+import { RoleEnum } from 'src/enums/role-enum';
+
 export class UserBaseDto {
-  name: string;
+  fullName: string;
   email: string;
   password: string;
-  role: string;
+  role: RoleEnum;
+  gender: string;
+  phoneNumber?: string;
+  address?: string;
+  code: string;
+  avatar?: string | 'default.png';
+  class?: string;
+  major?: string;
 }

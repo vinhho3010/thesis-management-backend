@@ -1,5 +1,6 @@
 import {
   HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -23,7 +24,7 @@ export class AuthService {
     const { email, password } = loginDto;
     const user = await this.userModel.findOne({ email: email });
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Account not found');
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -55,7 +56,7 @@ export class AuthService {
     const { password } = registerDto;
     const user = await this.userModel.findOne({ email: registerDto.email });
     if (user) {
-      throw new HttpException('User already exists', 409);
+      throw new HttpException('User already exists', HttpStatus.CONFLICT);
     }
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -71,7 +72,7 @@ export class AuthService {
       });
       return new ResponseData({ newUser, token }, 'User created', 201);
     } catch (error) {
-      throw new HttpException(error, 500);
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

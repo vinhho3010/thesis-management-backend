@@ -9,7 +9,7 @@ export class RegisterDto {
   password: string;
 
   @IsNotEmpty()
-  name: string;
+  fullName: string;
 
   gender: string;
 
@@ -18,4 +18,8 @@ export class RegisterDto {
   phone?: string;
 
   address?: string;
+
+  code: string;
+
+  avatar?: string;
 }
