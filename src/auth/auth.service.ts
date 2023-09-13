@@ -53,8 +53,10 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto) {
-    const { password } = registerDto;
-    const user = await this.userModel.findOne({ email: registerDto.email });
+    const { password, email, code } = registerDto;
+    const user = await this.userModel.findOne({
+      $or: [{ email: email }, { code: code }],
+    });
     if (user) {
       throw new HttpException('User already exists', HttpStatus.CONFLICT);
     }
@@ -71,6 +73,53 @@ export class AuthService {
         role: newUser.role,
       });
       return new ResponseData({ newUser, token }, 'User created', 201);
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async registerListAccount(listRegister: RegisterDto[]) {
+    try {
+      if (listRegister.length === 0) {
+        throw new HttpException(
+          'Danh sách tài khoản rỗng',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const duplicatedAccount = [];
+      const newAccount = [];
+      const standarlizedListRegister = listRegister.map((register) => {
+        return {
+          ...register,
+          password: bcrypt.hashSync(register.password, 10),
+        };
+      });
+
+      for await (const register of standarlizedListRegister) {
+        const duplicatedUser = await this.userModel.findOne({
+          $or: [{ email: register.email }, { code: register.code }],
+        });
+        if (duplicatedUser) {
+          duplicatedAccount.push(register);
+        } else {
+          newAccount.push(register);
+        }
+      }
+
+      if (newAccount.length === 0) {
+        throw new HttpException(
+          'Tất cả email đăng ký đã tồn tại',
+          HttpStatus.CONFLICT,
+        );
+      } else {
+        await this.userModel.insertMany(newAccount);
+      }
+
+      return new ResponseData(
+        { duplicatedAccount, newAccount },
+        'Đăng ký thành công danh sách tài khoản',
+        201,
+      );
     } catch (error) {
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }

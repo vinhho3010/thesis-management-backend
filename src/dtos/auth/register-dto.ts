@@ -21,5 +21,9 @@ export class RegisterDto {
 
   code: string;
 
-  avatar?: string;
+  avatar?: string | 'default.png';
+
+  class?: string;
+
+  major?: string;
 }

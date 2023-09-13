@@ -16,4 +16,9 @@ export class AuthController {
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
+
+  @Post('register-list')
+  async registerLít(@Body() listRegister: RegisterDto[]) {
+    return this.authService.registerListAccount(listRegister);
+  }
 }
