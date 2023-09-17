@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { RoleEnum } from 'src/enums/role-enum';
+import { Class } from './class.schema';
+import { Topic } from './topic.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -39,6 +41,17 @@ export class User {
 
   @Prop()
   major: string;
+
+  //student
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class' })
+  followClass: Class;
+
+  //teacher
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class' })
+  instructClass: Class;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Topic' })
+  Topic: Topic;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
