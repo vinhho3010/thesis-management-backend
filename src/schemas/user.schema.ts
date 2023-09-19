@@ -3,6 +3,7 @@ import mongoose, { HydratedDocument } from 'mongoose';
 import { RoleEnum } from 'src/enums/role-enum';
 import { Class } from './class.schema';
 import { Topic } from './topic.schema';
+import { Major } from './major.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -39,8 +40,8 @@ export class User {
   @Prop()
   class: string;
 
-  @Prop()
-  major: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Major'})
+  major: Major;
 
   //student
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class' })

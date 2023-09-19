@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { User } from './user.schema';
 import { refDocs } from './refDocs.schema';
+import { Thesis } from './thesis.schema';
 
 export type ClassDocument = HydratedDocument<Class>;
 
@@ -18,6 +19,12 @@ export class Class {
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'refDocs' }] })
   refDocsList: refDocs[];
+
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Thesis' }] })
+  thesisList: Thesis[];
+
+  @Prop()
+  semester: string;
 
   // @Prop( type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }] )
   // postList: Post[];

@@ -1,7 +1,7 @@
+import { MajorModule } from './modules/major/major.module';
 import { TopicModule } from './modules/topic/topic.module';
 import { ThesisVersionModule } from './modules/thesis-version/thesis-version.module';
 
-import { ThesisVersionService } from './modules/thesis-version/thesis-version.service';
 import { ThesisModule } from './modules/thesis/thesis.module';
 import { MilestoneModule } from './modules/milestone/milestone.module';
 import { CommentModule } from './modules/comment/comment.module';
@@ -18,6 +18,8 @@ import { UserModule } from './modules/user/user.module';
 import { DocsModule } from './modules/docs/docs.module';
 @Module({
   imports: [
+    MajorModule,
+    MajorModule,
     TopicModule,
     ThesisVersionModule,
     ThesisModule,
