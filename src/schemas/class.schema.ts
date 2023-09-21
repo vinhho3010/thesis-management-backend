@@ -3,6 +3,7 @@ import mongoose, { HydratedDocument } from 'mongoose';
 import { User } from './user.schema';
 import { refDocs } from './refDocs.schema';
 import { Thesis } from './thesis.schema';
+import { Major } from './major.schema';
 
 export type ClassDocument = HydratedDocument<Class>;
 
@@ -25,6 +26,9 @@ export class Class {
 
   @Prop()
   semester: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Major' })
+  major: Major;
 
   // @Prop( type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }] )
   // postList: Post[];

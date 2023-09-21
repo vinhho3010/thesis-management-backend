@@ -1,8 +1,7 @@
-/*
-https://docs.nestjs.com/providers#services
-*/
-
-import { HttpException, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ClassDto } from 'src/dtos/class/class-dto';
@@ -19,7 +18,7 @@ export class ClassService {
   }
 
   async findAllDetail(): Promise<Class[]> {
-    return this.classModel.find().populate('teacher').exec();
+    return this.classModel.find().populate('teacher', 'fullName email').exec();
   }
 
   async findOneById(id: string): Promise<Class> {
@@ -27,12 +26,16 @@ export class ClassService {
   }
 
   async create(classDto: ClassDto): Promise<Class> {
-    try {
-      const newClass = await this.classModel.create(classDto);
-      return newClass;
-    } catch (error) {
-      throw new HttpException(error, 409);
+    const { teacher, semester } = classDto;
+    const existedClass = await this.classModel.findOne({
+      teacher: teacher,
+      semester: semester,
+    });
+    if (existedClass) {
+      throw new HttpException('Giảng viên đã tạo nhóm trong học kỳ này', 409);
     }
+    const newClass = await this.classModel.create(classDto);
+    return newClass;
   }
 
   async deleteClassById(id: string): Promise<Class> {
@@ -46,4 +49,6 @@ export class ClassService {
     }
     return await this.classModel.findByIdAndUpdate(id, classDto);
   }
+
+
 }

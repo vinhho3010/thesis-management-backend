@@ -1,7 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { log } from 'console';
 import { Model } from 'mongoose';
 import { UserUpdateDto } from 'src/dtos/user/user-update-dto';
+import { RoleEnum } from 'src/enums/role-enum';
 import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
@@ -40,5 +42,17 @@ export class UserService {
 
   async findByEmail(email: string): Promise<User> {
     return this.userModel.findOne({ email });
+  }
+
+  async findAllByMajor(role: RoleEnum, majorId: string): Promise<User[]> {
+    try {
+      log(role);
+      return this.userModel.find({ major: majorId, role: role }).exec();
+    } catch (error) {
+      throw new HttpException(
+        'Không tìm thấy người dùng',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

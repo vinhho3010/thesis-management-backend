@@ -40,7 +40,7 @@ export class User {
   @Prop()
   class: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Major'})
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Major' })
   major: Major;
 
   //student

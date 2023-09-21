@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from 'src/schemas/user.schema';
 import { UserUpdateDto } from 'src/dtos/user/user-update-dto';
@@ -20,6 +28,14 @@ export class UserController {
   @Get(':id')
   findOne(@Param('id') id: string): Promise<User> {
     return this.userService.findOneById(id);
+  }
+
+  @Get('major/:majorId')
+  findAllTeacherByMajor(
+    @Query('role') role,
+    @Param('majorId') majorId: string,
+  ): Promise<User[]> {
+    return this.userService.findAllByMajor(role, majorId);
   }
 
   @Put(':id')

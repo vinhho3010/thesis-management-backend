@@ -9,4 +9,12 @@ export class ClassDto {
   student?: string[];
 
   documents?: string[];
+
+  thesis?: string[];
+
+  semester?: string;
+
+  major?: string;
+
+  // postList: Post[];
 }
