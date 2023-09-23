@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { log } from 'console';
 import { Model } from 'mongoose';
 import { UserUpdateDto } from 'src/dtos/user/user-update-dto';
 import { RoleEnum } from 'src/enums/role-enum';
@@ -46,7 +45,6 @@ export class UserService {
 
   async findAllByMajor(role: RoleEnum, majorId: string): Promise<User[]> {
     try {
-      log(role);
       return this.userModel.find({ major: majorId, role: role }).exec();
     } catch (error) {
       throw new HttpException(

@@ -22,7 +22,14 @@ export class ClassService {
   }
 
   async findOneById(id: string): Promise<Class> {
-    return this.classModel.findById(id).exec();
+    const classDetail = await this.classModel
+      .findById(id)
+      .populate('teacher', 'fullName email')
+      .exec();
+    if (!classDetail) {
+      throw new HttpException('Không tìm thấy lớp', 404);
+    }
+    return classDetail;
   }
 
   async create(classDto: ClassDto): Promise<Class> {
@@ -39,16 +46,19 @@ export class ClassService {
   }
 
   async deleteClassById(id: string): Promise<Class> {
-    return this.classModel.findByIdAndRemove(id);
+    const existClass = await this.classModel.findById({ _id: id });
+    if (!existClass) {
+      throw new HttpException('Không tìm thấy lớp', 404);
+    }
+    return await this.classModel.findByIdAndDelete(id);
   }
 
   async updateClassById(id: string, classDto: ClassDto): Promise<Class> {
     const existClass = this.classModel.findById({ _id: id });
     if (!existClass) {
-      throw new HttpException('Class not found', 404);
+      throw new HttpException('Không tìm thấy lớp', 404);
     }
     return await this.classModel.findByIdAndUpdate(id, classDto);
   }
-
 
 }

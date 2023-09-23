@@ -24,8 +24,11 @@ export class Class {
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Thesis' }] })
   thesisList: Thesis[];
 
-  @Prop()
+  @Prop({ required: true })
   semester: string;
+
+  @Prop({ required: true })
+  schoolYear: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Major' })
   major: Major;
