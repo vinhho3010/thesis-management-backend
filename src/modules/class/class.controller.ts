@@ -42,4 +42,12 @@ export class ClassController {
   remove(@Param('id') id: string): Promise<Class> {
     return this.classService.deleteClassById(id);
   }
+
+  @Post(':classId/add-student')
+  addStudent(
+    @Param('classId') classId: string,
+    @Body() studentId: string,
+  ): Promise<Class> {
+    return this.classService.addStudent(classId, studentId);
+  }
 }

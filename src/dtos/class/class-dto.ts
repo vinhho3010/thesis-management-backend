@@ -14,6 +14,8 @@ export class ClassDto {
 
   semester?: string;
 
+  schoolYear?: string;
+
   major?: string;
 
   // postList: Post[];

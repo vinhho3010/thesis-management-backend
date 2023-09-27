@@ -10,6 +10,7 @@ import {
 import { UserService } from './user.service';
 import { User } from 'src/schemas/user.schema';
 import { UserUpdateDto } from 'src/dtos/user/user-update-dto';
+import { RoleEnum } from 'src/enums/role-enum';
 
 @Controller('api/user')
 export class UserController {
@@ -20,7 +21,7 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(':role')
+  @Get('roles/:role')
   findAllByRole(@Param('role') role: string): Promise<User[]> {
     return this.userService.findAllByRole(role);
   }
@@ -49,5 +50,14 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string): Promise<User> {
     return this.userService.delete(id);
+  }
+
+  @Get('key-value/:role')
+  getByKey(
+    @Param('role') role: RoleEnum,
+    @Query('key') key: string,
+    @Query('value') value: string,
+  ): Promise<User[]> {
+    return this.userService.getByKey(role, key, value);
   }
 }

@@ -1,5 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { log } from 'console';
 import { Model } from 'mongoose';
 import { UserUpdateDto } from 'src/dtos/user/user-update-dto';
 import { RoleEnum } from 'src/enums/role-enum';
@@ -20,7 +26,7 @@ export class UserService {
   }
 
   async findAllByRole(role: string): Promise<User[]> {
-    return await this.userModel.find({ role: role }).exec();
+    return this.userModel.find({ role: role }).populate('major').exec();
   }
 
   async update(id: string, user: UserUpdateDto): Promise<User> {
@@ -41,6 +47,16 @@ export class UserService {
 
   async findByEmail(email: string): Promise<User> {
     return this.userModel.findOne({ email });
+  }
+
+  async getByKey(role: RoleEnum, key: string, value: string): Promise<User[]> {
+    const userData = await this.userModel
+      .find({ role: role, [key]: value })
+      .exec();
+    if (!userData) {
+      throw new NotFoundException('Không tìm thấy người dùng');
+    }
+    return userData;
   }
 
   async findAllByMajor(role: RoleEnum, majorId: string): Promise<User[]> {
