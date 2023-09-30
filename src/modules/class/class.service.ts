@@ -4,11 +4,13 @@ import { log } from 'console';
 import { Model } from 'mongoose';
 import { ClassDto } from 'src/dtos/class/class-dto';
 import { Class, ClassDocument } from 'src/schemas/class.schema';
+import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
 export class ClassService {
   constructor(
     @InjectModel(Class.name) private readonly classModel: Model<ClassDocument>,
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}
 
   async findAll(): Promise<Class[]> {
@@ -16,7 +18,11 @@ export class ClassService {
   }
 
   async findAllDetail(): Promise<Class[]> {
-    return this.classModel.find().populate('teacher', 'fullName email').exec();
+    return this.classModel
+      .find()
+      .populate('teacher', 'fullName email')
+      .populate('major')
+      .exec();
   }
 
   async findOneById(id: string): Promise<Class> {
@@ -54,28 +60,35 @@ export class ClassService {
   }
 
   async updateClassById(id: string, classDto: ClassDto): Promise<Class> {
-    const existClass = this.classModel.findById({ _id: id });
+    const existClass = this.classModel.findById(id);
     if (!existClass) {
       throw new HttpException('Không tìm thấy lớp', 404);
     }
     return await this.classModel.findByIdAndUpdate(id, classDto);
   }
 
-  async addStudent(classId: string, studentId: any): Promise<Class> {
+  async addStudent(classId: string, student: any): Promise<Class> {
     const currentClass = await this.classModel.findById(classId);
     if (!currentClass) {
-      throw new HttpException('Không tìm thấy lớp', 404);
+      throw new HttpException('Không tìm thấy nhóm', 404);
+    }
+
+    const studentExist = await this.userModel.findById(student._id);
+    log(studentExist);
+    if (!studentExist) {
+      throw new HttpException('Không tìm thấy sinh viên', 404);
     }
 
     const studentListId = currentClass.student.map((student: any) =>
       student._id.toString(),
     );
-    if (studentListId.includes(studentId._id.toString())) {
-      throw new HttpException('Sinh viên đã tồn tại trong lớp', 409);
+
+    if (studentListId.includes(student._id.toString())) {
+      throw new HttpException('Sinh viên đã có trong nhóm', 409);
     }
     const updatedClass = await this.classModel.findByIdAndUpdate(
       classId,
-      { $addToSet: { student: studentId } },
+      { $addToSet: { student: student } },
       { new: true },
     );
     return updatedClass;

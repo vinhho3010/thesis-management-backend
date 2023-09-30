@@ -10,6 +10,7 @@ import {
 import { ClassService } from './class.service';
 import { Class } from 'src/schemas/class.schema';
 import { ClassDto } from 'src/dtos/class/class-dto';
+import { User } from 'src/schemas/user.schema';
 
 @Controller('api/class')
 export class ClassController {
@@ -46,8 +47,8 @@ export class ClassController {
   @Post(':classId/add-student')
   addStudent(
     @Param('classId') classId: string,
-    @Body() studentId: string,
+    @Body() student: User,
   ): Promise<Class> {
-    return this.classService.addStudent(classId, studentId);
+    return this.classService.addStudent(classId, student);
   }
 }
