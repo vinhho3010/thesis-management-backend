@@ -6,7 +6,7 @@ import { ThesisVersion } from './thesis-version.schema';
 import { Result } from './result.schema';
 import { ThesisStatus } from 'src/enums/thesis-status.enum';
 
-export type ClassDocument = HydratedDocument<Thesis>;
+export type ThesisDocument = HydratedDocument<Thesis>;
 
 @Schema({ timestamps: true })
 export class Thesis {

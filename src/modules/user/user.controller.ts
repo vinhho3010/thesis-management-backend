@@ -60,4 +60,11 @@ export class UserController {
   ): Promise<User[]> {
     return this.userService.getByKey(role, key, value);
   }
+
+  @Get('major/:majorId/has-class')
+  findAllTeacherByMajorHasClass(
+    @Param('majorId') majorId: string,
+  ): Promise<User[]> {
+    return this.userService.findAllTeacherHasClassByMajor(majorId);
+  }
 }

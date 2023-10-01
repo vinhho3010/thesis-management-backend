@@ -22,14 +22,17 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
-    const user = await this.userModel.findOne({ email: email });
+    const user = await this.userModel
+      .findOne({ email: email })
+      .populate('major');
+
     if (!user) {
-      throw new UnauthorizedException('Account not found');
+      throw new UnauthorizedException('Tài khoản không tồn tại');
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Sai mật khẩu');
     }
 
     const token = this.jwtService.sign({

@@ -51,4 +51,12 @@ export class ClassController {
   ): Promise<Class> {
     return this.classService.addStudent(classId, student);
   }
+
+  @Delete(':classId/remove-student/:studentId')
+  removeStudent(
+    @Param('classId') classId: string,
+    @Param('studentId') studentId: string,
+  ): Promise<Class> {
+    return this.classService.removeStudent(classId, studentId);
+  }
 }

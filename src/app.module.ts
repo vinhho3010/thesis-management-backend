@@ -1,3 +1,5 @@
+import { PendingClassModule } from './modules/pending-class/pending-class.module';
+import { PendingClassModule } from './modules/pending-class.module';
 import { MajorModule } from './modules/major/major.module';
 import { TopicModule } from './modules/topic/topic.module';
 import { ThesisVersionModule } from './modules/thesis-version/thesis-version.module';
@@ -18,6 +20,8 @@ import { UserModule } from './modules/user/user.module';
 import { DocsModule } from './modules/docs/docs.module';
 @Module({
   imports: [
+    PendingClassModule,
+    PendingClassModule,
     MajorModule,
     MajorModule,
     TopicModule,

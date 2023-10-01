@@ -3,7 +3,7 @@ import mongoose, { HydratedDocument } from 'mongoose';
 import { Milestone } from './milestone.schema';
 import { Thesis } from './thesis.schema';
 
-export type ClassDocument = HydratedDocument<ThesisVersion>;
+export type ThesisVersionDocument = HydratedDocument<ThesisVersion>;
 
 @Schema()
 export class ThesisVersion {
