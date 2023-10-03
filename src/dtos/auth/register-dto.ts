@@ -10,20 +10,15 @@ export class RegisterDto {
 
   @IsNotEmpty()
   fullName: string;
-
   gender: string;
-
   role: RoleEnum;
-
-  phone?: string;
-
+  phoneNumber?: string;
   address?: string;
-
   code: string;
-
   avatar?: string | 'default.png';
-
   class?: string;
-
   major?: string;
+  followClass?: string;
+  instructClass?: string;
+  topic?: string;
 }

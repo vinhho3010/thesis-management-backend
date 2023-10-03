@@ -13,17 +13,17 @@ export class Thesis {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true })
+  @Prop()
   nameEng: string;
 
-  @Prop({ required: true })
+  @Prop()
   summaryContent: string;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
   student: User;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Topic' })
-  topic: Topic;
+  @Prop()
+  topic: string;
 
   @Prop()
   refUrl: string;

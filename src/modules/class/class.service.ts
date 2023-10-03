@@ -46,7 +46,11 @@ export class ClassService {
     if (existedClass) {
       throw new HttpException('Giảng viên đã tạo nhóm trong học kỳ này', 409);
     }
+    //create new class
     const newClass = await this.classModel.create(classDto);
+    await this.userModel.findByIdAndUpdate(teacher, {
+      instructClass: newClass._id,
+    });
     return newClass;
   }
 
