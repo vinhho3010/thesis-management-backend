@@ -31,6 +31,11 @@ export class ClassController {
     return this.classService.findOneById(id);
   }
 
+  @Get(':id/student')
+  findStudents(@Param('id') id: string): Promise<User[]> {
+    return this.classService.findStudentById(id);
+  }
+
   @Put(':id')
   update(
     @Param('id') id: string,

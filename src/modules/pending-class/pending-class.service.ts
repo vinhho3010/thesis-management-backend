@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PendingClassDto } from 'src/dtos/pending-class/pending-class.dto';
+import { PendingStatus } from 'src/enums/pendingStatus.enum';
 import { ThesisStatus } from 'src/enums/thesis-status.enum';
 import { Class, ClassDocument } from 'src/schemas/class.schema';
 import {
@@ -37,13 +38,30 @@ export class PendingClassService {
     return await this.pendingClassListModel.create({
       student: data.studentId,
       class: data.classId,
-      status: false,
+      status: PendingStatus.PENDING,
       type: data.type,
       topic: data.topic,
       description: data.description,
       semester: this.configService.get('SEMESTER'),
       schoolYear: this.configService.get('SCHOOLYEAR'),
     });
+  }
+
+  async updatePendingList(
+    id: string,
+    updatePendingClass: PendingClassDto,
+  ): Promise<PendingClassList> {
+    const pendingItem = await this.pendingClassListModel.findById(id);
+
+    if (pendingItem.status !== PendingStatus.PENDING) {
+      throw new HttpException('Không thể cập nhật', 409);
+    }
+
+    return await this.pendingClassListModel.findByIdAndUpdate(
+      id,
+      updatePendingClass,
+      { new: true },
+    );
   }
 
   async findListByClassId(id: string): Promise<PendingClassList[]> {
@@ -53,6 +71,7 @@ export class PendingClassService {
           class: id,
           semester: this.configService.get('SEMESTER'),
           schoolYear: this.configService.get('SCHOOLYEAR'),
+          status: PendingStatus.PENDING,
         })
         .populate('student');
 
@@ -84,7 +103,45 @@ export class PendingClassService {
       status: ThesisStatus.PROPOSED,
     });
 
-    //remove pending item
-    return await this.pendingClassListModel.findByIdAndDelete(id);
+    return await this.pendingClassListModel.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        status: PendingStatus.APPROVED,
+      },
+    );
+  }
+
+  rejectPending(id: string) {
+    return this.pendingClassListModel.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        status: PendingStatus.REJECTED,
+      },
+    );
+  }
+
+  async findPendingListByStudentId(id: string) {
+    return this.pendingClassListModel
+      .find({
+        student: id,
+        semester: this.configService.get('SEMESTER'),
+        schoolYear: this.configService.get('SCHOOLYEAR'),
+      })
+      .populate({
+        path: 'class',
+        select: 'name',
+        populate: {
+          path: 'teacher',
+          select: 'fullName email major',
+        },
+      });
+  }
+
+  async deletePendingList(id: string) {
+    return this.pendingClassListModel.findByIdAndDelete(id);
   }
 }

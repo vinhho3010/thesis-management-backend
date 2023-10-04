@@ -23,6 +23,15 @@ export class ClassService {
       .exec();
   }
 
+  async findStudentById(id: string): Promise<User[]> {
+    const classData = await this.classModel
+      .findById(id)
+      .populate('student')
+      .exec();
+
+    return classData.student;
+  }
+
   async findOneById(id: string): Promise<Class> {
     const classDetail = await this.classModel
       .findById(id)

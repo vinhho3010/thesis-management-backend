@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { User } from './user.schema';
 import { Class } from './class.schema';
+import { PendingStatus } from 'src/enums/pendingStatus.enum';
 
 export type PendingClassListDocument = HydratedDocument<PendingClassList>;
 
@@ -14,7 +15,7 @@ export class PendingClassList {
   class: Class;
 
   @Prop({ required: true })
-  status: boolean;
+  status: PendingStatus;
 
   @Prop({ required: true })
   type: string;

@@ -1,7 +1,6 @@
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { User } from './user.schema';
-import { Topic } from './topic.schema';
 import { ThesisVersion } from './thesis-version.schema';
 import { Result } from './result.schema';
 import { ThesisStatus } from 'src/enums/thesis-status.enum';
@@ -19,7 +18,7 @@ export class Thesis {
   @Prop()
   summaryContent: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   student: User;
 
   @Prop()
