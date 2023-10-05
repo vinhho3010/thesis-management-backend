@@ -9,6 +9,7 @@ import {
 } from 'src/schemas/pending-class.schema';
 import { Class, ClassSchema } from 'src/schemas/class.schema';
 import { Thesis, ThesisSchema } from 'src/schemas/thesis.schema';
+import { User, UserSchema } from 'src/schemas/user.schema';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { Thesis, ThesisSchema } from 'src/schemas/thesis.schema';
       { name: PendingClassList.name, schema: PendingClassListSchema },
       { name: Class.name, schema: ClassSchema },
       { name: Thesis.name, schema: ThesisSchema },
+      { name: User.name, schema: UserSchema },
     ]),
   ],
   controllers: [PendingClassController],

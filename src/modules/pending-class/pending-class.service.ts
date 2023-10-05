@@ -11,6 +11,7 @@ import {
   PendingClassListDocument,
 } from 'src/schemas/pending-class.schema';
 import { Thesis, ThesisDocument } from 'src/schemas/thesis.schema';
+import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
 export class PendingClassService {
@@ -20,6 +21,7 @@ export class PendingClassService {
     @InjectModel(Class.name) private readonly classModel: Model<ClassDocument>,
     @InjectModel(Thesis.name)
     private readonly thesisModel: Model<ThesisDocument>,
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private configService: ConfigService,
   ) {}
 
@@ -102,6 +104,11 @@ export class PendingClassService {
       schoolYear: this.configService.get('SCHOOLYEAR'),
       status: ThesisStatus.PROPOSED,
     });
+
+    await this.userModel.findOneAndUpdate(
+      { _id: pendingItem.student },
+      { followClass: pendingItem.class },
+    );
 
     return await this.pendingClassListModel.findOneAndUpdate(
       {
