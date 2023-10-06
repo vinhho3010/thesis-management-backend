@@ -1,3 +1,4 @@
+import { PostModule } from './modules/post/classPost.module';
 import { PendingClassModule } from './modules/pending-class/pending-class.module';
 import { MajorModule } from './modules/major/major.module';
 import { TopicModule } from './modules/topic/topic.module';
@@ -19,6 +20,7 @@ import { UserModule } from './modules/user/user.module';
 import { DocsModule } from './modules/docs/docs.module';
 @Module({
   imports: [
+    PostModule,
     PendingClassModule,
     PendingClassModule,
     MajorModule,
