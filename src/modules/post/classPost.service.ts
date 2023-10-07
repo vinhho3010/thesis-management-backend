@@ -16,9 +16,20 @@ export class ClassPostService {
     return await this.postModel.create(data);
   }
 
+  async updatePost(id: string, data: any): Promise<ClassPost> {
+    return await this.postModel.findOneAndUpdate({ _id: id }, data, {
+      new: true,
+    });
+  }
+
+  async deletePost(id: string): Promise<ClassPost> {
+    return this.postModel.findOneAndDelete({ _id: id });
+  }
+
   async getPostByClass(classId: string): Promise<ClassPost[]> {
     return await this.postModel
       .find({ class: classId })
+      .populate('user')
       .sort({ createdAt: -1 });
   }
 }
