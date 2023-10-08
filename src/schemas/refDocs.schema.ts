@@ -4,7 +4,7 @@ import { Class } from './class.schema';
 
 export type RefDocsDocument = HydratedDocument<refDocs>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class refDocs {
   @Prop({ required: true })
   title: string;
