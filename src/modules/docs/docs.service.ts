@@ -24,6 +24,11 @@ export class DocsService {
   async createDocs(createDocsDto: refDocs) {
     try {
       const newDocs = new this.refDocsModel(createDocsDto);
+      if(createDocsDto.type) {
+         await this.refDocsModel.findByIdAndUpdate(createDocsDto.type, {
+          $addToSet: { refDocs: newDocs._id },
+        });
+      }
       return await newDocs.save();
     } catch (error) {
       throw new HttpException('Lỗi server', HttpStatus.INTERNAL_SERVER_ERROR);
