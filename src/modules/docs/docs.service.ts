@@ -11,7 +11,9 @@ export class DocsService {
 
   async getDocsOfClass(id: string) {
     try {
-      return await this.refDocsModel.find({ class: id });
+      return await this.refDocsModel
+        .find({ class: id })
+        .sort({ createdAt: -1 });
     } catch (error) {
       throw new HttpException('Lỗi server', HttpStatus.INTERNAL_SERVER_ERROR);
     }
