@@ -20,4 +20,31 @@ export class DocsController {
   deleteDocs(@Param('id') id: string): Promise<refDocs> {
     return this.docsService.deleteDocs(id);
   }
+
+  @Get('type/:id')
+  GetType(@Param('id') id: string): Promise<any> {
+    return this.docsService.GetType(id);
+  }
+
+  @Get('class/:id/type')
+  getDocsTypeInClass(
+    @Param('id') classId: string,
+  ): Promise<any[]> {
+    return this.docsService.getDocsTypeInClass(classId);
+  }
+
+  @Get('type/:id/docs')
+  getDocsOfType(@Param('id') id: string): Promise<refDocs[]> {
+    return this.docsService.getDocsOfType(id);
+  }
+
+  @Post('class/:id/type')
+  createDocsType(@Body() createDocsTypeDto: any): Promise<any> {
+    return this.docsService.createDocsType(createDocsTypeDto);
+  }
+
+  @Delete('class/type/:id')
+  deleteDocsType(@Param('id') id: string): Promise<any> {
+    return this.docsService.deleteDocsType(id);
+  }
 }

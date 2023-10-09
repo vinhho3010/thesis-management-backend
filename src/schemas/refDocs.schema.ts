@@ -1,6 +1,7 @@
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Class } from './class.schema';
+import { refDocsType } from './refDocType.schema';
 
 export type RefDocsDocument = HydratedDocument<refDocs>;
 
@@ -12,8 +13,8 @@ export class refDocs {
   @Prop()
   description: string;
 
-  @Prop()
-  type: string;
+  @Prop( { type: mongoose.Schema.Types.ObjectId, ref: 'refDocsType' })
+  type: refDocsType;
 
   @Prop()
   url: string;
