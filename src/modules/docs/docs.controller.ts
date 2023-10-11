@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { DocsService } from './docs.service';
 import { refDocs } from 'src/schemas/refDocs.schema';
 
@@ -41,6 +41,14 @@ export class DocsController {
   @Post('class/:id/type')
   createDocsType(@Body() createDocsTypeDto: any): Promise<any> {
     return this.docsService.createDocsType(createDocsTypeDto);
+  }
+
+  @Put('class/type/:id/')
+  updateDocsType(
+    @Param('id') id: string,
+    @Body() updateDocsTypeDto: any,
+  ): Promise<any> {
+    return this.docsService.updateDocsType(id, updateDocsTypeDto);
   }
 
   @Delete('class/type/:id')

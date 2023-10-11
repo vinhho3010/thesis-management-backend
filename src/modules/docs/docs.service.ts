@@ -23,13 +23,11 @@ export class DocsService {
 
   async createDocs(createDocsDto: refDocs) {
     try {
-      const newDocs = new this.refDocsModel(createDocsDto);
-      if(createDocsDto.type) {
-         await this.refDocsModel.findByIdAndUpdate(createDocsDto.type, {
-          $addToSet: { refDocs: newDocs._id },
-        });
-      }
-      return await newDocs.save();
+      const newDocs = await this.refDocsModel.create(createDocsDto);
+      await this.refDocsTypeModel.findOneAndUpdate(newDocs.type, {
+        $push: { refDocs: newDocs._id },
+      });
+      return newDocs;
     } catch (error) {
       throw new HttpException('Lỗi server', HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -55,7 +53,7 @@ export class DocsService {
     try {
       return await this.refDocsModel
         .find({ type: id })
-        .populate('type')
+        .populate('type', 'name')
         .sort({ createdAt: -1 });
     } catch (error) {
       throw new HttpException('Lỗi server', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -75,9 +73,20 @@ export class DocsService {
     try {
       const docsType = await this.refDocsTypeModel
         .find({ class: classId })
-        .populate('refDocs')
         .sort({ createdAt: -1 });
       return docsType;
+    } catch (error) {
+      throw new HttpException('Lỗi server', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async updateDocsType(id: string, updateDocsTypeDto: any) {
+    try {
+      const docsType = await this.refDocsTypeModel.findById(id);
+      if (!docsType) {
+        throw new HttpException('Không tìm thấy loại tài liệu', 404);
+      }
+      return await this.refDocsTypeModel.findByIdAndUpdate(id, updateDocsTypeDto);
     } catch (error) {
       throw new HttpException('Lỗi server', HttpStatus.INTERNAL_SERVER_ERROR);
     }
