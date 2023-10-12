@@ -43,6 +43,7 @@ export class PendingClassService {
       status: PendingStatus.PENDING,
       type: data.type,
       topic: data.topic,
+      topicEng: data.topicEng,
       description: data.description,
       semester: this.configService.get('SEMESTER'),
       schoolYear: this.configService.get('SCHOOLYEAR'),
@@ -75,7 +76,14 @@ export class PendingClassService {
           schoolYear: this.configService.get('SCHOOLYEAR'),
           status: PendingStatus.PENDING,
         })
-        .populate('student');
+        .populate({
+          path: 'student',
+          select: 'fullName code email class',
+          populate: {
+            path: 'major',
+            select: 'name',
+          }
+        });
 
       return pendingList;
     } catch (error) {

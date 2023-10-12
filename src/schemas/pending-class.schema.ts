@@ -22,6 +22,9 @@ export class PendingClassList {
 
   @Prop({ required: true })
   topic: string;
+  
+  @Prop({ required: true })
+  topicEng: string;
 
   @Prop()
   description?: string;
