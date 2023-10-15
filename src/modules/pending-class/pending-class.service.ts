@@ -93,16 +93,27 @@ export class PendingClassService {
 
   async approvePending(id: string) {
     const pendingItem = await this.pendingClassListModel.findById(id);
+    const result = await this.pendingClassListModel.findOneAndUpdate(
+      { _id: id,},
+      {status: PendingStatus.APPROVED,},
+    );
+    const restPendingList = await this.pendingClassListModel.find({
+      student: pendingItem.student,
+      semester: this.configService.get('SEMESTER'),
+      schoolYear: this.configService.get('SCHOOLYEAR'),
+      status: {$ne: PendingStatus.APPROVED}
+    });
 
     //add student to class
     await this.classModel.findOneAndUpdate(
       { _id: pendingItem.class },
-      { $addToSet: { student: pendingItem.student } },
+      { $push: { student: pendingItem.student } },
     );
 
     //add new thesis and assign for student
     await this.thesisModel.create({
       name: pendingItem.topic,
+      topicEng: pendingItem.topicEng,
       class: pendingItem.class,
       student: pendingItem.student,
       topic: pendingItem.topic,
@@ -110,22 +121,18 @@ export class PendingClassService {
       description: pendingItem.description,
       semester: this.configService.get('SEMESTER'),
       schoolYear: this.configService.get('SCHOOLYEAR'),
-      status: ThesisStatus.PROPOSED,
+      status: ThesisStatus.IN_PROGRESS,
     });
 
     await this.userModel.findOneAndUpdate(
       { _id: pendingItem.student },
       { followClass: pendingItem.class },
     );
-
-    return await this.pendingClassListModel.findOneAndUpdate(
-      {
-        _id: id,
-      },
-      {
-        status: PendingStatus.APPROVED,
-      },
-    );
+    
+    if(restPendingList.length > 0) {
+      await this.pendingClassListModel.findByIdAndDelete(restPendingList.map(rest => rest._id));
+    }
+    return result;
   }
 
   rejectPending(id: string) {

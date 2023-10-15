@@ -25,7 +25,7 @@ export class UserService {
   }
 
   async findOneById(id: string): Promise<User> {
-    return this.userModel.findById(id).exec();
+    return this.userModel.findById(id, {password: false}).exec();
   }
 
   async findAllByRole(role: string): Promise<User[]> {

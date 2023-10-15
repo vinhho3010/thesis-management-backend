@@ -4,6 +4,7 @@ import { User } from './user.schema';
 import { ThesisVersion } from './thesis-version.schema';
 import { Result } from './result.schema';
 import { ThesisStatus } from 'src/enums/thesis-status.enum';
+import { Class } from './class.schema';
 
 export type ThesisDocument = HydratedDocument<Thesis>;
 
@@ -12,33 +13,41 @@ export class Thesis {
   @Prop({ required: true })
   name: string;
 
-  @Prop()
-  nameEng: string;
+  @Prop({ required: true })
+  topicEng: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class', required: true  })
+  class: Class;
 
   @Prop()
-  summaryContent: string;
+  description: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true  })
   student: User;
 
-  @Prop()
+  @Prop({ required: true })
   topic: string;
 
   @Prop()
-  refUrl: string;
+  type: string;
+
+  @Prop()
+  refUrl?: string;
 
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'Version' }])
-  versions: ThesisVersion[];
+  versions?: ThesisVersion[];
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'result' }] })
   results: Result[];
 
-  @Prop()
+  @Prop({ required: true })
   status: ThesisStatus;
 
-  @Prop() createAt: Date;
+  @Prop({ required: true })
+  semester: string;
 
-  @Prop() updateAt: Date;
+  @Prop({ required: true })
+  schoolYear: string;
 }
 
 export const ThesisSchema = SchemaFactory.createForClass(Thesis);
