@@ -26,7 +26,14 @@ export class ClassService {
   async findStudentById(id: string): Promise<User[]> {
     const classData = await this.classModel
       .findById(id)
-      .populate('student')
+      .populate({
+        path: 'student',
+        select: 'fullName code email class',
+        populate: {
+          path: 'major',
+          select: 'name',
+        }
+      })
       .exec();
 
     return classData.student;
