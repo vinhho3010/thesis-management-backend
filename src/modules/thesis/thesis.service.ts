@@ -15,8 +15,8 @@ export class ThesisService {
     private configService: ConfigService,
   ) {}
 
-  async getStudentThesis(_id: string) {
-    const student = await this.UserModel.findById(_id);
+  async getStudentThesis(_id: string, withStudent?: boolean) {
+    const student = await this.UserModel.findById(_id, {password: false});
     if (student) {
       const studentThesis = await this.ThesisModel.findOne({
         student: student._id,
@@ -32,9 +32,18 @@ export class ThesisService {
         },
       })
         .populate('student', 'fullName');
-      return studentThesis;
+      return withStudent ? studentThesis : {...studentThesis, student: student.fullName};
     } else {
       throw new HttpException('Không tìm thấy sinh viên', HttpStatus.NOT_FOUND);
     }
   }
+
+  async updateStudentThesis(studentId: string, thesisDto: any) {
+    return await this.ThesisModel.findOneAndUpdate({
+      student: studentId,
+      semester: this.configService.get('SEMESTER'),
+      schoolYear: this.configService.get('SCHOOLYEAR'),
+    }, thesisDto, { new: true});
+  }
+
 }
