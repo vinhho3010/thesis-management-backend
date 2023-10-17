@@ -1,12 +1,12 @@
-import { Body, Controller, Get, Param, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put } from '@nestjs/common';
 import { ThesisService } from './thesis.service';
 @Controller('/api/thesis')
 export class ThesisController {
     constructor(private thesisService: ThesisService){}
 
     @Get('/student/:studentId')
-    async getStudentThesis(@Param('studentId') studentId: string, @Query('withStudent') withStudent: boolean) {
-        return this.thesisService.getStudentThesis(studentId, withStudent);
+    async getStudentThesis(@Param('studentId') studentId: string) {
+        return this.thesisService.getStudentThesis(studentId);
     }
 
     @Put('/student/:studentId')

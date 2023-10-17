@@ -15,7 +15,7 @@ export class ThesisService {
     private configService: ConfigService,
   ) {}
 
-  async getStudentThesis(_id: string, withStudent?: boolean) {
+  async getStudentThesis(_id: string) {
     const student = await this.UserModel.findById(_id, {password: false});
     if (student) {
       const studentThesis = await this.ThesisModel.findOne({
@@ -31,8 +31,8 @@ export class ThesisService {
           select: 'fullName email major',
         },
       })
-        .populate('student', 'fullName');
-      return withStudent ? studentThesis : {...studentThesis, student: student.fullName};
+      .populate('student', 'fullName');
+      return studentThesis;
     } else {
       throw new HttpException('Không tìm thấy sinh viên', HttpStatus.NOT_FOUND);
     }
