@@ -1,6 +1,7 @@
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { User } from './user.schema';
+import { ThesisVersion } from './thesis-version.schema';
+import { Class } from './class.schema';
 
 export type MilestoneDocument = HydratedDocument<Milestone>;
 
@@ -18,14 +19,15 @@ export class Milestone {
   @Prop({ required: true })
   endDate: Date;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
-  student: User[];
-
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  supervisor: User;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class' })
+  class: Class;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }] })
   comments: Comment[];
+
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ThesisVersion' }] })
+  thesisVersionList: ThesisVersion[];
+
 }
 
 export const MilestoneSchema = SchemaFactory.createForClass(Milestone);

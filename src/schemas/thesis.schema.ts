@@ -9,7 +9,7 @@ import { Class } from './class.schema';
 export type ThesisDocument = HydratedDocument<Thesis>;
 
 @Schema({ timestamps: true })
-export class Thesis {
+export class  Thesis {
   @Prop({ required: true })
   name: string;
 

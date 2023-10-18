@@ -15,6 +15,9 @@ export class ThesisVersion {
 
   @Prop({ required: true })
   version: string;
+
+  @Prop({ required: true })
+  refUrl: string;
 }
 
 export const ThesisVersionSchema = SchemaFactory.createForClass(ThesisVersion);
