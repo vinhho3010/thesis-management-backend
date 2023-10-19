@@ -1,3 +1,4 @@
+import { MailSenderModule } from './modules/mail-sender/mailsender.module';
 import { PostModule } from './modules/post/classPost.module';
 import { PendingClassModule } from './modules/pending-class/pending-class.module';
 import { MajorModule } from './modules/major/major.module';
@@ -18,8 +19,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { DocsModule } from './modules/docs/docs.module';
+
 @Module({
   imports: [
+    MailSenderModule,
     PostModule,
     PendingClassModule,
     PendingClassModule,

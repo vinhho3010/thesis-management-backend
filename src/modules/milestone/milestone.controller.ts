@@ -12,6 +12,13 @@ export class MilestoneController {
         return this.milestoneService.getAllClassMilestone(classId);
     }
 
+    @Get('/:milestoneId')
+    async getMilestone(
+        @Param('milestoneId') milestoneId: string
+    ) {
+        return this.milestoneService.getMilestone(milestoneId);
+    }
+
     @Post('/class/:classId')
     async createMilestone(
         @Param('classId') classId: string,
