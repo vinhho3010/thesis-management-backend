@@ -23,6 +23,17 @@ export class MilestoneService {
     return milestones;
   }
 
+  async getMilestone(milestoneId: string): Promise<Milestone> {
+    const milestone = await this.milestoneModel
+      .findById(milestoneId)
+      .populate('class')
+      .populate('thesisVersionList');
+    if (!milestone) {
+      throw new HttpException('Không tìm thấy', 404);
+    }
+    return milestone;
+  }
+
   async createMilestone(classId: string, milestone: Milestone): Promise<Milestone> {
     const savedMilestone = {
       title: milestone.title,
