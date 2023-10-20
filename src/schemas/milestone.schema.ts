@@ -27,6 +27,7 @@ export class Milestone {
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ThesisVersion' }] })
   thesisVersionList: ThesisVersion[];
+  _id: any;
 
 }
 
