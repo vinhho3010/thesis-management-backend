@@ -58,8 +58,15 @@ export class MilestoneService {
     return newMilestone;
   }
 
-  async updateMilestone(milestoneId: string, milestone: Milestone): Promise<Milestone> {
-    return await this.milestoneModel.findByIdAndUpdate(milestoneId, milestone);
+  async updateMilestone(milestoneId: string, milestone: any): Promise<Milestone> {
+    const updatedMilestone = await this.milestoneModel.findByIdAndUpdate(milestoneId, milestone, { new: true });
+    if(updatedMilestone && milestone?.isSendMail) {
+      const classInfo = await this.classModel.findById(updatedMilestone.class)
+      .populate('teacher', 'fullName email')
+      .populate('student', 'fullName email');
+      this.mailSenderService.informUpdatedMilestone(this.buildCreateMilestoneContext(updatedMilestone, classInfo));
+    }
+    return updatedMilestone
   }
 
   async deleteMilestone(milestoneId: string): Promise<Milestone> {
