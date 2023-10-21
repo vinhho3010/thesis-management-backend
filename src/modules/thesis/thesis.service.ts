@@ -31,7 +31,8 @@ export class ThesisService {
           select: 'fullName email major',
         },
       })
-      .populate('student', 'fullName');
+      .populate('student', 'fullName')
+      .populate('versions');
       return studentThesis;
     } else {
       throw new HttpException('Không tìm thấy sinh viên', HttpStatus.NOT_FOUND);

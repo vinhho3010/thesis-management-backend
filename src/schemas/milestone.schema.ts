@@ -5,7 +5,7 @@ import { Class } from './class.schema';
 
 export type MilestoneDocument = HydratedDocument<Milestone>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Milestone {
   @Prop({ required: true })
   title: string;
@@ -27,6 +27,7 @@ export class Milestone {
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ThesisVersion' }] })
   thesisVersionList: ThesisVersion[];
+
   _id?: any;
 
 }

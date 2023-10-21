@@ -34,10 +34,10 @@ export class  Thesis {
   @Prop()
   refUrl?: string;
 
-  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'Version' }])
-  versions?: ThesisVersion[];
+  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'ThesisVersion' }])
+  versions: ThesisVersion[];
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'result' }] })
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Result' }] })
   results: Result[];
 
   @Prop({ required: true })
