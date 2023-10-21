@@ -4,6 +4,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ClassDto } from 'src/dtos/class/class-dto';
 import { Class, ClassDocument } from 'src/schemas/class.schema';
+import { PendingClassList, PendingClassListDocument } from 'src/schemas/pending-class.schema';
+import { Thesis, ThesisDocument } from 'src/schemas/thesis.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
@@ -11,6 +13,8 @@ export class ClassService {
   constructor(
     @InjectModel(Class.name) private readonly classModel: Model<ClassDocument>,
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(PendingClassList.name) private readonly pendingClassModel: Model<PendingClassListDocument>,
+    @InjectModel(Thesis.name) private readonly thesisModel: Model<ThesisDocument>,
     private configService: ConfigService,
   ) {}
 
@@ -125,9 +129,12 @@ export class ClassService {
     return updatedClass;
   }
 
-  removeStudent(classId: string, studentId: string): Promise<Class> {
+  async removeStudent(classId: string, studentId: string): Promise<Class> {
     try {
-      return this.classModel.findByIdAndUpdate(
+      await this.pendingClassModel.deleteMany({ student: studentId, class: classId });
+      await this.userModel.findByIdAndUpdate(studentId, { $unset: { followClass: classId } });
+      await this.thesisModel.deleteMany({ student: studentId, class: classId });
+      return await  this.classModel.findByIdAndUpdate(
         classId,
         { $pull: { student: studentId } },
         { new: true },
