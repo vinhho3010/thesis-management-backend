@@ -23,6 +23,14 @@ export class ThesisVersionService {
       .exec();
   }
 
+  async getSudentVersions(studentId: string) {
+    return await this.thesisVersionModel
+      .find({ student: studentId })
+      .populate('milestone')
+      .sort({ createdAt: -1 })
+      .exec();
+  }
+
   async getVersionStudentMilestone(studentId: string, milestoneId: string) {
     return await this.thesisVersionModel
       .findOne({ student: studentId, milestone: milestoneId })
@@ -40,7 +48,11 @@ export class ThesisVersionService {
     return await this.thesisVersionModel
       .findByIdAndUpdate(
         thesisVersionId,
-        { url: newFile.url, updateUrlAt: new Date(), fileName: newFile.fileName },
+        {
+          url: newFile.url,
+          updateUrlAt: new Date(),
+          fileName: newFile.fileName,
+        },
         { new: true },
       )
       .exec();

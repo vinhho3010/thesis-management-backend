@@ -13,4 +13,9 @@ export class ThesisController {
     async updateStudentThesis(@Param('studentId') studentId: string, @Body() thesisDto: any) {
         return this.thesisService.updateStudentThesis(studentId, thesisDto);
     }
+
+    @Put('/:thesisId/custom-url')
+    async updateThesisCustomUrl(@Param('thesisId') thesisId: string, @Body() thesisDto: any) {
+        return this.thesisService.updateThesisCustomUrl(thesisId, thesisDto);
+    }
 }

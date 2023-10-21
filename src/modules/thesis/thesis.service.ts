@@ -52,5 +52,8 @@ export class ThesisService {
       schoolYear: this.configService.get('SCHOOLYEAR'),
     }, thesisDto, { new: true});
   }
-
+    
+  async updateThesisCustomUrl(thesisId: string, thesisDto: any) {
+    return await this.ThesisModel.findByIdAndUpdate(thesisId, thesisDto, { new: true});
+  }
 }
