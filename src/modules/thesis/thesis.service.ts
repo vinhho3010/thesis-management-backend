@@ -32,7 +32,13 @@ export class ThesisService {
         },
       })
       .populate('student', 'fullName')
-      .populate('versions');
+      .populate({
+        path: 'versions',
+        populate: {
+          path: 'milestone',
+          select: 'title',
+        },
+      });
       return studentThesis;
     } else {
       throw new HttpException('Không tìm thấy sinh viên', HttpStatus.NOT_FOUND);
@@ -46,5 +52,8 @@ export class ThesisService {
       schoolYear: this.configService.get('SCHOOLYEAR'),
     }, thesisDto, { new: true});
   }
-
+    
+  async updateThesisCustomUrl(thesisId: string, thesisDto: any) {
+    return await this.ThesisModel.findByIdAndUpdate(thesisId, thesisDto, { new: true});
+  }
 }

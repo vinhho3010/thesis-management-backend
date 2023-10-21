@@ -32,7 +32,16 @@ export class  Thesis {
   type: string;
 
   @Prop()
-  refUrl?: string;
+  url: string;
+
+  @Prop({ default: false})
+  isCustomUrl: boolean;
+
+  @Prop()
+  customUrl: string;
+
+  @Prop()
+  customFileName: string;
 
   @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'ThesisVersion' }])
   versions: ThesisVersion[];

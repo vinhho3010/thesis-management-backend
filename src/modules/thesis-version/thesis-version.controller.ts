@@ -22,6 +22,13 @@ export class ThesisVersionController {
         return this.thesisVersionService.getVersionStudentMilestone(studentId, milestoneId);
     }
 
+    @Get('/student/:studentId')
+    async getSudentVersions(
+        @Param('studentId') studentId: string
+    ) {
+        return this.thesisVersionService.getSudentVersions(studentId);
+    }
+
     @Put('/:thesisVersionId')
     async updateThesisVersion(
         @Param('thesisVersionId') thesisVersionId: string,

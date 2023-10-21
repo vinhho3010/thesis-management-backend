@@ -103,11 +103,12 @@ export class MilestoneService {
   }
 
   async deleteMilestone(milestoneId: string): Promise<Milestone> {
-    this.thesisVersionModel.deleteMany({ milestone: milestoneId });
+    await this.thesisVersionModel.deleteMany({ milestone: milestoneId });
+    await this.thesisModel.updateMany({ versions: milestoneId }, { $pull: { versions: milestoneId } });
     return await this.milestoneModel.findByIdAndDelete(milestoneId);
   }
 
-  buildMilestoneContext (milestone: Milestone, classInfo: Class): MailSenderDto {
+  buildMilestoneContext (milestone: any, classInfo: Class): MailSenderDto {
     return {
       to: classInfo.student.map(student => student.email),
       context: {
