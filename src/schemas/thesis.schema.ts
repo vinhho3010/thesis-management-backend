@@ -57,6 +57,10 @@ export class  Thesis {
 
   @Prop({ required: true })
   schoolYear: string;
+
+  @Prop()
+  protectedAt: Date;
+
 }
 
 export const ThesisSchema = SchemaFactory.createForClass(Thesis);
