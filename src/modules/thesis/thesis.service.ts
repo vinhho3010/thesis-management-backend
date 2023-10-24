@@ -56,4 +56,8 @@ export class ThesisService {
   async updateThesisCustomUrl(thesisId: string, thesisDto: any) {
     return await this.ThesisModel.findByIdAndUpdate(thesisId, thesisDto, { new: true});
   }
+
+  async updateThesis(thesisId: string, thesisDto: any) {
+    return await this.ThesisModel.findByIdAndUpdate(thesisId, thesisDto, { new: true});
+  }
 }

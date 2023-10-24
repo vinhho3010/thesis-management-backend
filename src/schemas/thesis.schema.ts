@@ -5,6 +5,7 @@ import { ThesisVersion } from './thesis-version.schema';
 import { Result } from './result.schema';
 import { ThesisStatus } from 'src/enums/thesis-status.enum';
 import { Class } from './class.schema';
+import { ProtectInfo } from './protect-info';
 
 export type ThesisDocument = HydratedDocument<Thesis>;
 
@@ -57,6 +58,10 @@ export class  Thesis {
 
   @Prop({ required: true })
   schoolYear: string;
+
+  @Prop({type: mongoose.Schema.Types.Mixed})
+  protectInfo: ProtectInfo;
+
 }
 
 export const ThesisSchema = SchemaFactory.createForClass(Thesis);

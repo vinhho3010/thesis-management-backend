@@ -1,3 +1,4 @@
+import { CouncilModule } from './modules/council/council.module';
 import { MailSenderModule } from './modules/mail-sender/mailsender.module';
 import { PostModule } from './modules/post/classPost.module';
 import { PendingClassModule } from './modules/pending-class/pending-class.module';
@@ -22,6 +23,7 @@ import { DocsModule } from './modules/docs/docs.module';
 
 @Module({
   imports: [
+    CouncilModule,
     MailSenderModule,
     PostModule,
     PendingClassModule,
