@@ -13,3 +13,9 @@ export interface ThesisDto {
     semester: string;
     schoolYear: string;
 }
+
+export interface ProtectInfoDto {
+    room: string;
+    time: string;
+    date: Date;
+}

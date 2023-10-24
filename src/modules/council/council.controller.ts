@@ -38,7 +38,15 @@ export class CouncilController {
         return this.councilService.deleteCouncil(councilId);
     }
 
+    @Put('/:id/thesis/:thesisId')
+    async addThesisToCouncil(@Param('id') councilId: string, @Param('thesisId') thesisId: string, @Body()ProtectInfo: any) {
+        return this.councilService.addThesisToCouncil(councilId, thesisId, ProtectInfo);
+    }
 
+    @Delete('/:id/thesis/:thesisId')
+    async removeThesisFromCouncil(@Param('id') councilId: string, @Param('thesisId') thesisId: string) {
+        return this.councilService.removeThesisFromCouncil(councilId, thesisId);
+    }
 
 
 }

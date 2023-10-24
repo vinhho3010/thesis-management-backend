@@ -38,21 +38,59 @@ export class ClassService {
           select: 'name',
         }
       })
-      .exec();
+      const thesisOfClasses = await this.thesisModel.find({ class: id });
+      const studentWithThesis =  classData.student.map((student: any) => {
+      const matchingThesis = thesisOfClasses.find(thesis => thesis.student._id.toString() === student._id.toString());
+        if (matchingThesis) {
+          return {
+            ...student.toObject(),
+            thesis: {
+              _id: matchingThesis._id,
+              name: matchingThesis.name,
+              topic: matchingThesis.topic,
+              topicEng: matchingThesis.topicEng,
+              status: matchingThesis.status,
+            }
+          };
+        }
+        return student.toObject();
+      });
 
-    return classData.student;
+    return studentWithThesis;
   }
 
   async findOneById(id: string): Promise<Class> {
     const classDetail = await this.classModel
       .findById(id)
       .populate('teacher', 'fullName email')
-      .populate('student')
-      .exec();
+      .populate('student', 'fullName email code class');
+    
     if (!classDetail) {
       throw new HttpException('Không tìm thấy lớp', 404);
     }
-    return classDetail;
+    
+    const thesisOfClasses = await this.thesisModel.find({ class: id });
+    const studentWithThesis =  classDetail.student.map((student: any) => {
+    const matchingThesis = thesisOfClasses.find(thesis => thesis.student._id.toString() === student._id.toString());
+      if (matchingThesis) {
+        return {
+          ...student.toObject(),
+          thesis: {
+            _id: matchingThesis._id,
+            name: matchingThesis.name,
+            topic: matchingThesis.topic,
+            topicEng: matchingThesis.topicEng,
+            status: matchingThesis.status,
+          }
+        };
+      }
+      return student.toObject();
+    });
+  
+    return {
+      ...classDetail.toObject(),
+      student: studentWithThesis,
+    };
   }
 
   //tạo nhóm mới
