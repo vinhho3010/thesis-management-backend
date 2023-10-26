@@ -3,6 +3,7 @@ import mongoose, { HydratedDocument } from 'mongoose';
 import { Milestone } from './milestone.schema';
 import { Thesis } from './thesis.schema';
 import { User } from './user.schema';
+import { Comment } from './comment.schema';
 
 export type ThesisVersionDocument = HydratedDocument<ThesisVersion>;
 
@@ -32,6 +33,9 @@ export class ThesisVersion {
 
   @Prop()
   fileName: string;
+
+  @Prop( { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }] })
+  comments: Comment[];
 }
 
 export const ThesisVersionSchema = SchemaFactory.createForClass(ThesisVersion);
