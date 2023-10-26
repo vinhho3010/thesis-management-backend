@@ -23,4 +23,10 @@ export class ThesisController {
     async updateThesisProtectInfo(@Param('thesisId') thesisId: string, @Body() thesisDto: any) {
         return this.thesisService.updateThesis(thesisId, thesisDto);
     }
+
+    @Put('/:thesisId/scoring')
+    async updateThesisScoring(@Param('thesisId') thesisId: string, @Body() scoringDto: any) {
+        return this.thesisService.updateThesisScoring(thesisId, scoringDto);
+    }
+
 }
