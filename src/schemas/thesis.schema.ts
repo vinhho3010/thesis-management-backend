@@ -62,6 +62,9 @@ export class  Thesis {
   @Prop({type: mongoose.Schema.Types.Mixed})
   protectInfo: ProtectInfo;
 
+  @Prop({default: false})
+  isPublic: boolean;
+
 }
 
 export const ThesisSchema = SchemaFactory.createForClass(Thesis);

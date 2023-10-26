@@ -90,4 +90,45 @@ export class ThesisService {
       return result;
     }
   }
+
+  async getAllThesis(page: number, limit: number, semester: string, schoolYear: string, isPublic: string) {
+    const skip = (page) * limit;
+    const query = {};
+    if (semester) {
+      query['semester'] = semester;
+    }
+    if (schoolYear) {
+      query['schoolYear'] = schoolYear;
+    }
+    if (isPublic) {
+      query['isPublic'] = isPublic;
+    }
+    const thesis = await this.ThesisModel.find(query)
+      .populate({
+        path: 'class',
+        select: 'name',
+        populate: {
+          path: 'teacher',
+          select: 'fullName email major',
+        },
+      })
+      .populate({
+        path: 'student',
+        select: 'fullName major email',
+        populate: {
+          path: 'major',
+          select: 'name',
+        },
+        })
+      .populate('results')
+      .skip(skip)
+      .limit(limit);
+    const total = await this.ThesisModel.countDocuments(query);
+    return {
+      data: thesis,
+      length: total,
+      page: page,
+      limit: limit,
+    };
+  }
 }

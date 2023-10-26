@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Query } from '@nestjs/common';
 import { ThesisService } from './thesis.service';
 @Controller('/api/thesis')
 export class ThesisController {
@@ -27,6 +27,17 @@ export class ThesisController {
     @Put('/:thesisId/scoring')
     async updateThesisScoring(@Param('thesisId') thesisId: string, @Body() scoringDto: any) {
         return this.thesisService.updateThesisScoring(thesisId, scoringDto);
+    }
+
+    @Get()
+    async getAllThesis(
+        @Query('page') page: number,
+        @Query('limit') limit: number,
+        @Query('semester') semester: string,
+        @Query('schoolYear') schoolYear: string,
+        @Query('isPublic') isPublic: string,
+    ) {
+        return this.thesisService.getAllThesis( page, limit, semester, schoolYear, isPublic);
     }
 
 }
