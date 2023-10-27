@@ -102,6 +102,8 @@ export class ThesisService {
     }
     if (isPublic) {
       query['isPublic'] = isPublic;
+    } else {
+      query['isPublic'] = { $ne: true };
     }
     const thesis = await this.ThesisModel.find(query)
       .populate({

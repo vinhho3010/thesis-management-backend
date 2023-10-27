@@ -25,7 +25,8 @@ export class UserService {
   }
 
   async findOneById(id: string): Promise<User> {
-    return this.userModel.findById(id, {password: false}).exec();
+    return (await this.userModel.findById(id, {password: false}))
+    .populate('major');
   }
 
   async findAllByRole(role: string): Promise<User[]> {
