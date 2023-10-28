@@ -39,10 +39,16 @@ export class MilestoneService {
       .populate('class')
       .populate({
         path: 'thesisVersionList',
-        populate: {
+        populate: [{
           path: 'student',
           select: 'fullName email',
-        }
+        },{
+          path: 'comments',
+          populate: {
+            path: 'user',
+            select: 'fullName email',
+          }
+        }]
       })
       .sort({ createdAt: -1 });
     if (!milestone) {

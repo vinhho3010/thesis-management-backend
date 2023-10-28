@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { ThesisVersionService } from './thesis-version.service';
 
 @Controller('api/thesis-version')
@@ -43,5 +43,21 @@ export class ThesisVersionController {
         @Body() newFile: any
     ) {
         return this.thesisVersionService.updateThesisVersionUrl(thesisVersionId, newFile);
+    }
+
+    @Put('/:thesisVersionId/add-comment')
+    async addComment(
+        @Param('thesisVersionId') thesisVersionId: string,
+        @Body() commentDto: any
+    ) {
+        return this.thesisVersionService.addComment(thesisVersionId, commentDto);
+    }
+
+    @Delete('/:thesisVersionId/delete-comment/:commentId')
+    async deleteComment(
+        @Param('thesisVersionId') thesisVersionId: string,
+        @Param('commentId') commentId: string
+    ) {
+        return this.thesisVersionService.deleteComment(thesisVersionId, commentId);
     }
 }
