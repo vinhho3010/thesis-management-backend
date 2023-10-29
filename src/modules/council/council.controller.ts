@@ -1,7 +1,3 @@
-/*
-https://docs.nestjs.com/controllers#controllers
-*/
-
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { CouncilService } from './council.service';
 
@@ -11,11 +7,13 @@ export class CouncilController {
 
   @Get()
   async getCouncils(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
     @Query('majorId') majorId: string,
     @Query('schoolYear') schoolYear: string,
     @Query('semester') semester: string,
   ) {
-    return await this.councilService.getCouncils(majorId, schoolYear, semester);
+    return await this.councilService.getCouncils(page, limit, majorId, schoolYear, semester);
   }
 
   @Get('/:id')

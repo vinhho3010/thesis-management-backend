@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
+import { log } from 'console';
 import { Model } from 'mongoose';
 import { ClassDto } from 'src/dtos/class/class-dto';
 import { Class, ClassDocument } from 'src/schemas/class.schema';
@@ -18,13 +19,23 @@ export class ClassService {
     private configService: ConfigService,
   ) {}
 
-  async findAllDetail(): Promise<Class[]> {
-    return this.classModel
+  async findAllDetail(page: number, limit: number): Promise<any> {
+    log(page, limit);
+    const classDetail = await this.classModel
       .find()
-      .populate('teacher', 'fullName code email')
-      .populate('major')
-      .populate('student', 'fullName code email')
-      .exec();
+      .populate('teacher', 'fullName email')
+      .populate('student', 'fullName email code class')
+      .skip(page * limit)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const total = await this.classModel.countDocuments();
+      return {
+        data: classDetail,
+        length: total,
+        page: page,
+        limit: limit,
+      };
   }
 
   async findStudentById(id: string): Promise<User[]> {
