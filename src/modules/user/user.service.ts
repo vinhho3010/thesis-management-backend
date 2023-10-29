@@ -33,6 +33,22 @@ export class UserService {
     return this.userModel.find({ role: role }).populate('major').exec();
   }
 
+  async findAllByRoleWithPagination(page: number, limit: number, role: string): Promise<any> {
+    const userData = await this.userModel
+      .find({ role: role })
+      .populate('major')
+      .skip(page * limit)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+    const total = await this.userModel.countDocuments({ role: role });
+    return {
+      data: userData,
+      length: total,
+      page: page,
+      limit: limit,
+    };
+  }
+
   async update(id: string, user: UserUpdateDto): Promise<User> {
     try {
       return this.userModel.findByIdAndUpdate(id, user);

@@ -25,6 +25,14 @@ export class UserController {
   findAllByRole(@Param('role') role: string): Promise<User[]> {
     return this.userService.findAllByRole(role);
   }
+  @Get('roles/:role/pagination')
+  findAllByRoleWithPagination(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Param('role') role: string,
+  ): Promise<User[]> {
+    return this.userService.findAllByRoleWithPagination(page, limit, role);
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string): Promise<User> {
