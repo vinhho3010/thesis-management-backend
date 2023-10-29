@@ -47,6 +47,9 @@ export class MilestoneService {
           populate: {
             path: 'user',
             select: 'fullName email',
+          },
+          options: {
+            sort: { createdAt: -1 } // Sort comments by createdAt field in ascending order.
           }
         }]
       })

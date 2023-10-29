@@ -41,7 +41,16 @@ export class ThesisVersionService {
     const version = await this.thesisVersionModel
       .findOne({ student: studentId, milestone: milestoneId })
       .populate('milestone')
-      .populate('comments')
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'user',
+          select: 'fullName email role',
+        },
+        options: {
+          sort: { createdAt: -1 } // Sort comments by createdAt field in ascending order.
+        }
+      })
       .exec();
 
     if (!version) {
