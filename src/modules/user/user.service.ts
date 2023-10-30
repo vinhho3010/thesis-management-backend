@@ -103,6 +103,14 @@ export class UserService {
       const teacherList = classData.map((item) => item.teacher);
       const teacherData = await this.userModel
         .find({ _id: { $in: teacherList }, role: RoleEnum.TEACHER })
+        .populate({
+          path: 'instructClass',
+          match: {
+            semester: this.configService.get('SEMESTER'),
+            schoolYear: this.configService.get('SCHOOLYEAR'),
+          }, //get only class has semester and schoolyear in env file as current semester
+          select: 'name',
+        })
         .exec();
       return teacherData;
     } catch (error) {

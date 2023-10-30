@@ -118,7 +118,7 @@ export class ClassService {
     //create new class
     const newClass = await this.classModel.create(classDto);
     await this.userModel.findByIdAndUpdate(teacher, {
-      instructClass: newClass._id,
+      $addToSet: { instructClass: newClass._id },
     });
     return newClass;
   }

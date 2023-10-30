@@ -50,8 +50,8 @@ export class User {
   followClass: Class;
 
   //teacher
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class' })
-  instructClass: Class;
+  @Prop({ type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Class' }]})
+  instructClass: Class[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Topic' })
   Topic: Topic;

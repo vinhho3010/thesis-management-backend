@@ -24,7 +24,8 @@ export class AuthService {
     const { email, password } = loginDto;
     const user = await this.userModel
       .findOne({ email: email })
-      .populate('major');
+      .populate('major')
+      .populate('instructClass');
 
     if (!user) {
       throw new UnauthorizedException('Tài khoản không tồn tại');
