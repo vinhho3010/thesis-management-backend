@@ -12,12 +12,15 @@ import { User, UserDocument } from 'src/schemas/user.schema';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from 'src/dtos/auth/register-dto';
+import { RoleEnum } from 'src/enums/role-enum';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -35,6 +38,15 @@ export class AuthService {
     if (!isMatch) {
       throw new UnauthorizedException('Sai mật khẩu');
     }
+
+    if(user.role === RoleEnum.STUDENT) {
+     const withCurrentClass = await user.populate('followClass');
+     if(withCurrentClass.followClass.schoolYear !== this.configService.get('SCHOOLYEAR') || withCurrentClass.followClass.semester !== this.configService.get('SEMESTER')) {
+      user.followClass = null;
+    } else {
+      user.followClass = withCurrentClass.followClass._id;
+    }
+  }
 
     const token = this.jwtService.sign({
       id: user._id,

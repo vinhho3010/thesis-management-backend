@@ -21,8 +21,11 @@ export class ClassController {
   findAll(
     @Query('page') page: number,
     @Query('limit') limit: number,
+    @Query('majorId') majorId: string,
+    @Query('schoolYear') schoolYear: string,
+    @Query('semester') semester: string,
   ): Promise<Class[]> {
-    return this.classService.findAllDetail(page, limit);
+    return this.classService.findAllDetail(page, limit, majorId, schoolYear, semester);
   }
 
   @Post()

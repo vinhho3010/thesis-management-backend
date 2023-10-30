@@ -36,6 +36,8 @@ export class Class {
   @Prop()
   description: string;
 
+  _id: any;
+
   // @Prop( type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }] )
   // postList: Post[];
 }

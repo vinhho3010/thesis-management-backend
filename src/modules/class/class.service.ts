@@ -1,10 +1,12 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { log } from 'console';
 import { Model } from 'mongoose';
 import { ClassDto } from 'src/dtos/class/class-dto';
+import { PendingStatus } from 'src/enums/pendingStatus.enum';
+import { ThesisStatus } from 'src/enums/thesis-status.enum';
 import { Class, ClassDocument } from 'src/schemas/class.schema';
+import { Milestone, MilestoneDocument } from 'src/schemas/milestone.schema';
 import { PendingClassList, PendingClassListDocument } from 'src/schemas/pending-class.schema';
 import { Thesis, ThesisDocument } from 'src/schemas/thesis.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
@@ -16,20 +18,31 @@ export class ClassService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     @InjectModel(PendingClassList.name) private readonly pendingClassModel: Model<PendingClassListDocument>,
     @InjectModel(Thesis.name) private readonly thesisModel: Model<ThesisDocument>,
+    @InjectModel(Milestone.name) private readonly milestoneModel: Model<MilestoneDocument>,
     private configService: ConfigService,
   ) {}
 
-  async findAllDetail(page: number, limit: number): Promise<any> {
-    log(page, limit);
+  async findAllDetail(page: number, limit: number, majorId: string, schoolYear: string, semester: string): Promise<any> {
+    const filters: any = {};
+    if (majorId) {
+      filters.major = majorId;
+    }
+    if (schoolYear) {
+      filters.schoolYear = schoolYear;
+    }
+    if (semester) {
+      filters.semester = semester;
+    }
     const classDetail = await this.classModel
-      .find()
+      .find(filters)
       .populate('teacher', 'fullName email')
       .populate('student', 'fullName email code class')
+      .populate('major', 'name')
       .skip(page * limit)
       .limit(limit)
       .sort({ createdAt: -1 });
 
-    const total = await this.classModel.countDocuments();
+    const total = await this.classModel.countDocuments(filters);
       return {
         data: classDetail,
         length: total,
@@ -128,6 +141,15 @@ export class ClassService {
     if (!existClass) {
       throw new HttpException('Không tìm thấy lớp', 404);
     }
+    await this.userModel.findByIdAndUpdate(existClass.teacher, {
+      $pull: { instructClass: existClass._id },
+    });
+    await this.userModel.updateMany(
+      { _id: { $in: existClass.student } },
+      { $unset: { followClass: existClass._id } },
+    );
+    await this.thesisModel.deleteMany({ class: id });
+    await this.milestoneModel.deleteMany({ class: id });
     return await this.classModel.findByIdAndDelete(id);
   }
 
@@ -174,6 +196,34 @@ export class ClassService {
       },
       { new: true },
     );
+    await this.pendingClassModel.deleteMany({ student: student._id, class: classId });
+    await this.userModel.findByIdAndUpdate(student._id, {
+      followClass: classId ,
+    });
+    await this.thesisModel.deleteMany({ student: student._id, semester: this.configService.get('SEMESTER'), schoolYear: this.configService.get('SCHOOLYEAR') });
+    await this.thesisModel.create({
+      student: student._id,
+      class: classId,
+      name: 'Chưa có',
+      type: 'Chưa có',
+      topic: 'Chưa có',
+      topicEng: 'Not yet registered',
+      status: ThesisStatus.IN_PROGRESS,
+      semester: this.configService.get('SEMESTER'),
+      schoolYear: this.configService.get('SCHOOLYEAR'),
+    });
+
+    await this.pendingClassModel.deleteMany({ student: student._id });
+    await this.pendingClassModel.create({
+      student: student._id,
+      class: classId,
+      status: PendingStatus.APPROVED,
+      type: 'Chưa có',
+      topic: 'Thêm bởi giáo vụ',
+      topicEng: 'Not yet registered',
+      semester: this.configService.get('SEMESTER'),
+      schoolYear: this.configService.get('SCHOOLYEAR'),
+    });
 
     return updatedClass;
   }
