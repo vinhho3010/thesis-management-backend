@@ -91,20 +91,29 @@ export class ThesisService {
     }
   }
 
-  async getAllThesis(page: number, limit: number, semester: string, schoolYear: string, isPublic: string) {
+  async getAllThesis(page: number, limit: number, semester: string, schoolYear: string, majorId: string, isPublic: string, status: ThesisStatus) {
     const skip = (page) * limit;
     const query = {};
+    if (status) {
+      query['status'] = status;
+    }
     if (semester) {
       query['semester'] = semester;
     }
     if (schoolYear) {
       query['schoolYear'] = schoolYear;
     }
+    if(majorId) {
+      // await this.UserModel.find({major: majorId});
+      //add filter  to find student has specfic major
+      query['student'] = { $in: await this.UserModel.find({major: majorId})};
+    }
     if (isPublic) {
       query['isPublic'] = isPublic;
     } else {
       query['isPublic'] = { $ne: true };
     }
+    
     const thesis = await this.ThesisModel.find(query)
       .populate({
         path: 'class',

@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Put, Query } from '@nestjs/common';
 import { ThesisService } from './thesis.service';
+import { ThesisStatus } from 'src/enums/thesis-status.enum';
 @Controller('/api/thesis')
 export class ThesisController {
     constructor(private thesisService: ThesisService){}
@@ -36,8 +37,9 @@ export class ThesisController {
         @Query('semester') semester: string,
         @Query('schoolYear') schoolYear: string,
         @Query('isPublic') isPublic: string,
+        @Query('majorId') majorId: string,
     ) {
-        return this.thesisService.getAllThesis( page, limit, semester, schoolYear, isPublic);
+        return this.thesisService.getAllThesis( page, limit, semester, schoolYear, majorId, isPublic, ThesisStatus.COMPLETED);
     }
 
 }
