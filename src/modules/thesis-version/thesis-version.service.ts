@@ -45,7 +45,7 @@ export class ThesisVersionService {
         path: 'comments',
         populate: {
           path: 'user',
-          select: 'fullName email role',
+          select: 'fullName email role avatar',
         },
         options: {
           sort: { createdAt: -1 } // Sort comments by createdAt field in ascending order.
@@ -94,13 +94,13 @@ export class ThesisVersionService {
         path: 'comments',
         populate: {
           path: 'user',
-          select: 'fullName email',
+          select: 'fullName email avatar',
         }
       });
 
-      const withStudentInfo = await thesisVersionWithNewComment.populate('student', 'fullName email');
+      const withStudentInfo = await thesisVersionWithNewComment.populate('student', 'fullName email avatar');
       const withMilestone = await thesisVersionWithNewComment.populate('milestone', 'title');
-      const newComment = await comment.populate('user', 'fullName email role');
+      const newComment = await comment.populate('user', 'fullName email role avatar');
 
       if (withStudentInfo && withMilestone && newComment && newComment.user.role === RoleEnum.TEACHER) {
         this.mailSenderService.informNewCommentThesis(this.buildAddCommentContext(withMilestone, withStudentInfo, newComment));

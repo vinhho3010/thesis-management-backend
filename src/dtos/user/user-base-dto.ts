@@ -9,7 +9,7 @@ export class UserBaseDto {
   phoneNumber?: string;
   address?: string;
   code: string;
-  avatar?: string | 'default.png';
+  avatar?: string;
   class?: string;
   major?: string;
 }

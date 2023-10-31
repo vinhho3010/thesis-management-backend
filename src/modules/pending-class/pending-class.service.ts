@@ -78,7 +78,7 @@ export class PendingClassService {
         })
         .populate({
           path: 'student',
-          select: 'fullName code email class',
+          select: 'fullName code email class avatar',
           populate: {
             path: 'major',
             select: 'name',
@@ -158,7 +158,7 @@ export class PendingClassService {
         select: 'name',
         populate: {
           path: 'teacher',
-          select: 'fullName email major',
+          select: 'fullName email major avatar',
         },
       });
   }

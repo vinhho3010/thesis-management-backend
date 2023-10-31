@@ -32,7 +32,7 @@ export class ThesisService {
         select: 'name',
         populate: {
           path: 'teacher',
-          select: 'fullName email major',
+          select: 'fullName email major avatar',
         },
       })
       .populate('student', 'fullName')
@@ -120,7 +120,7 @@ export class ThesisService {
         select: 'name',
         populate: {
           path: 'teacher',
-          select: 'fullName email major',
+          select: 'fullName email major avatar',
         },
       })
       .populate({

@@ -27,27 +27,27 @@ export class CouncilService {
       .populate('major')
       .populate({
         path: 'president',
-        select: 'fullName email',
+        select: 'fullName email avatar',
       })
       .populate({
         path: 'secretary',
-        select: 'fullName email',
+        select: 'fullName email avatar',
       })
       .populate({
         path: 'member',
-        select: 'fullName email',
+        select: 'fullName email avatar',
       })
       .populate({
         path: 'thesisList',
         select: 'name student topic topicEng status protectInfo class url results',
         populate: [
-          { path: 'student', select: 'fullName email code class major' },
+          { path: 'student', select: 'fullName email code class major avatar' },
           {
             path: 'class',
             select: 'teacher',
             populate: {
               path: 'teacher',
-              select: 'fullName email',
+              select: 'fullName email avatar',
             },
           },
           {
@@ -81,15 +81,15 @@ export class CouncilService {
       })
       .populate({
         path: 'president',
-        select: 'fullName email',
+        select: 'fullName email avatar',
       })
       .populate({
         path: 'secretary',
-        select: 'fullName email',
+        select: 'fullName email avatar',
       })
       .populate({
         path: 'member',
-        select: 'fullName email',
+        select: 'fullName email avatar',
       })
       .populate({
         path: 'thesisList',
@@ -201,15 +201,15 @@ export class CouncilService {
       })
       .populate({
         path: 'president',
-        select: 'fullName email',
+        select: 'fullName email avatar',
       })
       .populate({
         path: 'secretary',
-        select: 'fullName email',
+        select: 'fullName email avatar',
       })
       .populate({
         path: 'member',
-        select: 'fullName email',
+        select: 'fullName email avatar',
       });
     if (!councils) {
       throw new HttpException('Không tìm thấy hội đồng', 404);

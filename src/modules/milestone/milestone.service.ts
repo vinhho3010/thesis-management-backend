@@ -41,12 +41,12 @@ export class MilestoneService {
         path: 'thesisVersionList',
         populate: [{
           path: 'student',
-          select: 'fullName email',
+          select: 'fullName email avatar',
         },{
           path: 'comments',
           populate: {
             path: 'user',
-            select: 'fullName email',
+            select: 'fullName email avatar',
           },
           options: {
             sort: { createdAt: -1 } // Sort comments by createdAt field in ascending order.
@@ -70,8 +70,8 @@ export class MilestoneService {
     };
     const newMilestone = await this.milestoneModel.create(savedMilestone);
     const classInfo = await this.classModel.findById(classId)
-    .populate('teacher', 'fullName email')
-    .populate('student', 'fullName email');
+    .populate('teacher', 'fullName email avatar')
+    .populate('student', 'fullName email avatar');
 
     if(newMilestone) { //create success
       for(const student of classInfo.student) {
@@ -104,8 +104,8 @@ export class MilestoneService {
     const updatedMilestone = await this.milestoneModel.findByIdAndUpdate(milestoneId, milestone, { new: true });
     if(updatedMilestone && milestone?.isSendMail) {
       const classInfo = await this.classModel.findById(updatedMilestone.class)
-      .populate('teacher', 'fullName email')
-      .populate('student', 'fullName email');
+      .populate('teacher', 'fullName email avatar')
+      .populate('student', 'fullName email avatar');
       this.mailSenderService.informUpdatedMilestone(this.buildMilestoneContext(updatedMilestone, classInfo));
     }
     return updatedMilestone

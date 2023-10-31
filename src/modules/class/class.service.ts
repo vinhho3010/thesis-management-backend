@@ -35,8 +35,8 @@ export class ClassService {
     }
     const classDetail = await this.classModel
       .find(filters)
-      .populate('teacher', 'fullName email')
-      .populate('student', 'fullName email code class')
+      .populate('teacher', 'fullName email avatar')
+      .populate('student', 'fullName email code class avatar')
       .populate('major', 'name')
       .skip(page * limit)
       .limit(limit)
@@ -56,7 +56,7 @@ export class ClassService {
       .findById(id)
       .populate({
         path: 'student',
-        select: 'fullName code email class',
+        select: 'fullName code email class avatar',
         populate: {
           path: 'major',
           select: 'name',
@@ -86,8 +86,8 @@ export class ClassService {
   async findOneById(id: string): Promise<Class> {
     const classDetail = await this.classModel
       .findById(id)
-      .populate('teacher', 'fullName email')
-      .populate('student', 'fullName email code class');
+      .populate('teacher', 'fullName email avatar')
+      .populate('student', 'fullName email code class avatar');
     
     if (!classDetail) {
       throw new HttpException('Không tìm thấy lớp', 404);

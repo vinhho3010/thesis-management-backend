@@ -51,7 +51,7 @@ export class UserService {
 
   async update(id: string, user: UserUpdateDto): Promise<User> {
     try {
-      return this.userModel.findByIdAndUpdate(id, user);
+      return (await this.userModel.findByIdAndUpdate(id, user, { new: true }));
     } catch (error) {
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }

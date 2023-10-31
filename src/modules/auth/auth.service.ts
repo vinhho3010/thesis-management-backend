@@ -14,6 +14,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from 'src/dtos/auth/register-dto';
 import { RoleEnum } from 'src/enums/role-enum';
 import { ConfigService } from '@nestjs/config';
+import { ChangePasswordDto } from 'src/dtos/auth/change-password';
 
 @Injectable()
 export class AuthService {
@@ -139,5 +140,67 @@ export class AuthService {
     } catch (error) {
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  async changePassword(changePasswordDto: ChangePasswordDto) {
+    const { _id, oldPassword, newPassword } = changePasswordDto;
+    try {
+      const user = await this.userModel.findById(_id);
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        throw new HttpException('Sai mật khẩu', HttpStatus.BAD_REQUEST);
+      }
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      await this.userModel.findByIdAndUpdate(_id, {
+        password: hashedPassword,
+      });
+      return new ResponseData(
+        null,
+        'Đổi mật khẩu thành công',
+        HttpStatus.OK,
+      );
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async forgotPassword(email: string) {
+    //forgot password
+    // async forgotPassword(email: string) {
+    //   try {
+    //     const user = await this.userModel.findOne({ email });
+    //     if (!user) {
+    //       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    //     }
+
+    //     // Generate reset password token
+    //     const resetPasswordToken = crypto.randomBytes(20).toString('hex');
+
+    //     // Set the reset password token and expiration
+    //     user.resetPasswordToken = resetPasswordToken;
+    //     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+    //     await user.save();
+
+    //     // Send an email with the token
+    //     const resetURL = `http://${req.headers.host}/reset/${resetPasswordToken}`;
+    //     await sendEmail({
+    //       to: user.email,
+    //       subject: 'Password Reset',
+    //       text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\nPlease click on the following link, or paste this into your browser to complete the process:\n\n${resetURL}\n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n`
+    //     });
+
+    //     return new ResponseData(
+    //       null,
+    //       'Password reset link has been sent to your email',
+    //       HttpStatus.OK,
+    //     );
+    //   } catch (error) {
+    //     throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    //   }
+    // }
   }
 }
