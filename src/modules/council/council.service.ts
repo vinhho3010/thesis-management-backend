@@ -39,9 +39,14 @@ export class CouncilService {
       })
       .populate({
         path: 'thesisList',
-        select: 'name student topic topicEng status protectInfo class url results',
+        select:
+          'name student topic topicEng status protectInfo class url results',
         populate: [
-          { path: 'student', select: 'fullName email code class major avatar' },
+          {
+            path: 'student',
+            select: 'fullName email code class major avatar',
+            populate: { path: 'major' },
+          },
           {
             path: 'class',
             select: 'teacher',
@@ -51,8 +56,8 @@ export class CouncilService {
             },
           },
           {
-            path: 'results'
-          }
+            path: 'results',
+          },
         ],
       });
   }
@@ -63,7 +68,13 @@ export class CouncilService {
     });
   }
 
-  async getCouncils(page:number, limit:number, majorId: string, schoolYear: string, semester: string) {
+  async getCouncils(
+    page: number,
+    limit: number,
+    majorId: string,
+    schoolYear: string,
+    semester: string,
+  ) {
     const filters: any = {};
     if (majorId) {
       filters.major = majorId;
@@ -74,7 +85,7 @@ export class CouncilService {
     if (semester) {
       filters.semester = semester;
     }
-    const councils =  await this.CouncilModel.find(filters)
+    const councils = await this.CouncilModel.find(filters)
       .populate({
         path: 'major',
         select: 'name',
@@ -98,14 +109,14 @@ export class CouncilService {
       .skip(page * limit)
       .limit(limit);
 
-      const total = await this.CouncilModel.countDocuments(filters);
+    const total = await this.CouncilModel.countDocuments(filters);
 
-      return {
-        data: councils,
-        length: total,
-        page: page,
-        limit: limit,
-      }
+    return {
+      data: councils,
+      length: total,
+      page: page,
+      limit: limit,
+    };
   }
 
   async deleteCouncil(councilId: string) {
