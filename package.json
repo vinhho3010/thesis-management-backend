@@ -28,13 +28,17 @@
     "@nestjs/mongoose": "^10.0.1",
     "@nestjs/passport": "^10.0.1",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/platform-socket.io": "^10.2.8",
+    "@nestjs/websockets": "^10.2.8",
     "bcryptjs": "^2.4.3",
     "class-validator": "^0.14.0",
     "handlebars": "^4.7.8",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.4.5",
     "nodemailer": "^6.9.6",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

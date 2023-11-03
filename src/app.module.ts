@@ -1,3 +1,5 @@
+ 
+import { ChatModule } from './modules/chat/chat.module';
 import { CouncilModule } from './modules/council/council.module';
 import { MailSenderModule } from './modules/mail-sender/mailsender.module';
 import { PostModule } from './modules/post/classPost.module';
@@ -23,6 +25,7 @@ import { DocsModule } from './modules/docs/docs.module';
 
 @Module({
   imports: [
+    ChatModule,
     CouncilModule,
     MailSenderModule,
     PostModule,
@@ -49,4 +52,31 @@ import { DocsModule } from './modules/docs/docs.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  // configure(consumer: MiddlewareConsumer) {
+  //   consumer
+  //     .apply(AuthMiddleware)
+  //     .exclude(
+  //       { path: 'api/thesis*', method: RequestMethod.GET },
+  //       { path: 'api/login*', method: RequestMethod.ALL },
+  //       { path: 'api/majors', method: RequestMethod.GET }
+  //     )
+  //     .forRoutes(
+  //       {path: 'api/topic*', method: RequestMethod.ALL},
+  //       {path: 'api/milestone*', method: RequestMethod.ALL},
+  //       {path: 'api/comment*', method: RequestMethod.ALL},
+  //       { path: 'api/thesis*', method: RequestMethod.POST },
+  //       { path: 'api/thesis*', method: RequestMethod.PUT },
+  //       { path: 'api/thesis*', method: RequestMethod.DELETE },
+  //       {path: 'api/class*', method: RequestMethod.ALL},
+  //       {path: 'api/user*', method: RequestMethod.ALL},
+  //       {path: 'api/council*', method: RequestMethod.ALL},
+  //       {path: 'api/post*', method: RequestMethod.ALL},
+  //       {path: 'api/pending-class*', method: RequestMethod.ALL},
+  //       {path: 'api/thesis-version*', method: RequestMethod.ALL},
+  //       {path: 'api/mail-sender*', method: RequestMethod.ALL},
+  //       {path: 'api/docs*', method: RequestMethod.ALL},
+  //       {path: 'api/chat*', method: RequestMethod.ALL},
+  //     );
+  // }
+}

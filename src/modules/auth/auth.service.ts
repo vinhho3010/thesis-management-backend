@@ -16,6 +16,7 @@ import { RoleEnum } from 'src/enums/role-enum';
 import { ConfigService } from '@nestjs/config';
 import { ChangePasswordDto } from 'src/dtos/auth/change-password';
 
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -50,9 +51,7 @@ export class AuthService {
   }
 
     const token = this.jwtService.sign({
-      id: user._id,
-      email: user.email,
-      role: user.role,
+      user,
     });
 
     return new ResponseData(
@@ -167,6 +166,7 @@ export class AuthService {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async forgotPassword(email: string) {
     //forgot password
     // async forgotPassword(email: string) {
