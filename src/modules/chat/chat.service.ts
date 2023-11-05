@@ -18,7 +18,8 @@ export class ChatService {
             //don't return mesages of chat
             const chatList = await this.chatModel
               .find({ participants: { $in: [id] } }, { messages: false })
-              .populate('participants', 'fullName avatar role email code');
+              .populate('participants', 'fullName avatar role email code')
+              .sort({ updatedAt: -1 });
             return chatList;
         } catch (error) {
             throw new HttpException('Không tìm thấy danh sách tin', 404)

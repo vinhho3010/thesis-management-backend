@@ -69,8 +69,10 @@ export class ThesisService {
   async updateThesisScoring(thesisId: string, scoringDto: any) {
     const thesis = await this.ThesisModel.findById(thesisId);
     const result = await this.ResultModel.findOne({
-      thesis: thesisId,
-      teacher: scoringDto.teacher,
+        $and: [
+          {thesis: thesisId},
+          {teacher: scoringDto.teacher}
+        ]
     });
 
     if(!result){
