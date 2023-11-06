@@ -15,6 +15,8 @@ import { RegisterDto } from 'src/dtos/auth/register-dto';
 import { RoleEnum } from 'src/enums/role-enum';
 import { ConfigService } from '@nestjs/config';
 import { ChangePasswordDto } from 'src/dtos/auth/change-password';
+import { MailSenderService } from '../mail-sender/mailsender.service';
+import { log } from 'console';
 
 
 @Injectable()
@@ -23,6 +25,7 @@ export class AuthService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private mailSenderService: MailSenderService
   ) {}
 
   async login(loginDto: LoginDto) {
@@ -166,41 +169,37 @@ export class AuthService {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async forgotPassword(email: string) {
-    //forgot password
-    // async forgotPassword(email: string) {
-    //   try {
-    //     const user = await this.userModel.findOne({ email });
-    //     if (!user) {
-    //       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    //     }
+  async forceChangePassword(_id: string) {
+    const randomPass = this.randomPassGenerate(8);
+    const hashedPassword = await bcrypt.hash(randomPass, 10);
+    log(`reset Password to: ${randomPass}`);
+    const updatedUser =  await this.userModel.findByIdAndUpdate(_id, {
+      password: hashedPassword,
+    }, {new: true});
 
-    //     // Generate reset password token
-    //     const resetPasswordToken = crypto.randomBytes(20).toString('hex');
+    this.mailSenderService.informPasswordReset({
+      to: updatedUser.email,
+      context: {
+        password: randomPass,
+      },
+    });
 
-    //     // Set the reset password token and expiration
-    //     user.resetPasswordToken = resetPasswordToken;
-    //     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-
-    //     await user.save();
-
-    //     // Send an email with the token
-    //     const resetURL = `http://${req.headers.host}/reset/${resetPasswordToken}`;
-    //     await sendEmail({
-    //       to: user.email,
-    //       subject: 'Password Reset',
-    //       text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\nPlease click on the following link, or paste this into your browser to complete the process:\n\n${resetURL}\n\nIf you did not request this, please ignore this email and your password will remain unchanged.\n`
-    //     });
-
-    //     return new ResponseData(
-    //       null,
-    //       'Password reset link has been sent to your email',
-    //       HttpStatus.OK,
-    //     );
-    //   } catch (error) {
-    //     throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
-    //   }
-    // }
+    return new ResponseData(
+      null,
+      'Đổi mật khẩu thành công',
+      HttpStatus.OK,
+    );
   }
+
+  private randomPassGenerate(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
 }

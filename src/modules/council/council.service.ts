@@ -147,6 +147,18 @@ export class CouncilService {
     if (!thesis) {
       throw new HttpException('Không tìm thấy luận văn', 404);
     }
+
+    const exsitInAnotherCouncil = await this.CouncilModel.findOne({
+      thesisList: { $in: [thesisId] },
+    });
+
+    if (exsitInAnotherCouncil) {
+      throw new HttpException(
+        'Luận văn đã có trong hội đồng khác',
+        409,
+      );
+    }
+
     const thesisListId = council.thesisList.map((thesis: any) =>
       thesis._id.toString(),
     );

@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Put } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from 'src/dtos/auth/login-dto';
 import { RegisterDto } from 'src/dtos/auth/register-dto';
@@ -28,8 +28,8 @@ export class AuthController {
     return this.authService.changePassword(changePasswordDto);
   }
 
-  @Post('forgot-password')
-  async forgotPassword(@Body() email: string) {
-    return this.authService.forgotPassword(email);
+  @Put('force-change-password')
+  async forgotPassword(@Body() body: any) {
+    return this.authService.forceChangePassword(body._id);
   }
 }

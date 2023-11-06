@@ -66,4 +66,21 @@ export class MailSenderService {
     console.log(`Mail sent to ${data.to}`);
     return 'Mail sent'
   }
+
+  async informPasswordReset(data: MailSenderDto) {
+    if(Array.isArray(data.to)) {
+      data.to = data.to.join(', ');
+    }
+    const context = {
+      password: data.context.password,
+    }
+    await this.mailerService.sendMail({
+      to: data.to,
+      subject: 'Mật khẩu mới - Hệ thống quản lý luận văn',
+      template: './resetPassword',
+      context: context,
+    });
+    console.log(`Mail sent to ${data.to}`);
+    return 'Mail sent'
+  }
 }
