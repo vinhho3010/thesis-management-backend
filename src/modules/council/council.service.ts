@@ -52,7 +52,7 @@ export class CouncilService {
             select: 'teacher',
             populate: {
               path: 'teacher',
-              select: 'fullName email avatar',
+              select: 'fullName email avatar major',
             },
           },
           {
@@ -238,5 +238,35 @@ export class CouncilService {
       throw new HttpException('Không tìm thấy hội đồng', 404);
     }
     return councils;
+  }
+
+  async getCouncilByThesisId(thesisId: string) {
+    const thesis = await this.ThesisModel.findById(thesisId);
+    if (!thesis) {
+      throw new HttpException('Không tìm thấy luận văn', 404);
+    }
+    const council = await this.CouncilModel.findOne({
+      thesisList: { $in: [thesisId] },
+    }, {thesisList: 0})
+      .populate({
+        path: 'major',
+        select: 'name',
+      })
+      .populate({
+        path: 'president',
+        select: 'fullName email avatar',
+      })
+      .populate({
+        path: 'secretary',
+        select: 'fullName email avatar',
+      })
+      .populate({
+        path: 'member',
+        select: 'fullName email avatar',
+      });
+    if (!council) {
+      throw new HttpException('Không tìm thấy hội đồng', 404);
+    }
+    return council;
   }
 }

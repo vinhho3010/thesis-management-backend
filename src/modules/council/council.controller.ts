@@ -65,4 +65,11 @@ export class CouncilController {
   ) {
     return await this.councilService.getCouncilByMemberId(teacherId,schoolYear,semester);
   }
+
+  @Get('/thesis/:thesisId')
+  async getCouncilsByThesis(
+    @Param('thesisId') thesisId: string,
+  ) {
+    return await this.councilService.getCouncilByThesisId(thesisId);
+  }
 }

@@ -46,10 +46,10 @@ export class AuthService {
 
     if(user.role === RoleEnum.STUDENT) {
      const withCurrentClass = await user.populate('followClass');
-     if(withCurrentClass.followClass.schoolYear !== this.configService.get('SCHOOLYEAR') || withCurrentClass.followClass.semester !== this.configService.get('SEMESTER')) {
+     if(withCurrentClass?.followClass?.schoolYear !== this.configService.get('SCHOOLYEAR') || withCurrentClass?.followClass?.semester !== this.configService.get('SEMESTER')) {
       user.followClass = null;
     } else {
-      user.followClass = withCurrentClass.followClass._id;
+      user.followClass = withCurrentClass?.followClass?._id;
     }
   }
 
