@@ -2,6 +2,7 @@ import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { User } from './user.schema';
 import { Class } from './class.schema';
+import { Comment } from './comment.schema';
 
 export type ClassPostDocument = HydratedDocument<ClassPost>;
 
@@ -19,11 +20,8 @@ export class ClassPost {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'ClassPost' })
   replyTo: ClassPost;
 
-  @Prop()
-  CreateAt: Date;
-
-  @Prop()
-  UpdateAt: Date;
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }] })
+  comments: Comment[];
 }
 
 export const ClassPostSchema = SchemaFactory.createForClass(ClassPost);

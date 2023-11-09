@@ -28,4 +28,20 @@ export class ClassPostController {
   ): Promise<ClassPost> {
     return this.postService.updatePost(id, updatePostDto);
   }
+
+  @Put(':id/add-comment')
+  addComment(
+    @Param('id') id: string,
+    @Body() commentDto: any,
+  ): Promise<ClassPost> {
+    return this.postService.addComment(id, commentDto);
+  }
+
+  @Delete(':id/delete-comment/:commentId')
+  deleteComment(
+    @Param('id') id: string,
+    @Param('commentId') commentId: any,
+  ): Promise<ClassPost> {
+    return this.postService.deleteComment(id, commentId);
+  }
 }
