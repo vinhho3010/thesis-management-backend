@@ -39,7 +39,7 @@ export class UserService {
       .populate('major')
       .skip(page * limit)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      //.sort({ createdAt: -1 });
     const total = await this.userModel.countDocuments({ role: role });
     return {
       data: userData,
@@ -108,11 +108,11 @@ export class UserService {
           match: {
             semester: this.configService.get('SEMESTER'),
             schoolYear: this.configService.get('SCHOOLYEAR'),
-          }, //get only class has semester and schoolyear in env file as current semester
+          }, //filter only class has semester and schoolyear in env file as current semester
           select: 'name',
         })
         .exec();
-      return teacherData;
+      return teacherData.filter((item) => item.instructClass.length > 0);
     } catch (error) {
       throw new HttpException(
         'Không tìm thấy người dùng',
