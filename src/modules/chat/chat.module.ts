@@ -13,6 +13,9 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { User, UserSchema } from 'src/schemas/user.schema';
+import { NotificationModule } from '../notification/notification.module';
+import { NotificationService } from '../notification/notification.service';
+import { Notification, NotificationSchema } from 'src/schemas/notification.schema';
 
 @Module({
   imports: [
@@ -20,6 +23,7 @@ import { User, UserSchema } from 'src/schemas/user.schema';
       { name: Message.name, schema: MessageSchema },
       { name: Chat.name, schema: ChatSchema },
       { name: User.name, schema: UserSchema },
+      {name: Notification.name, schema: NotificationSchema}
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
@@ -31,9 +35,10 @@ import { User, UserSchema } from 'src/schemas/user.schema';
         },
       }),
     }),
+    NotificationModule
   ],
   controllers: [
         ChatController, ],
-  providers: [ChatService, ChatGateway],
+  providers: [ChatService, ChatGateway, NotificationService],
 })
 export class ChatModule {}

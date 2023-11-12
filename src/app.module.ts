@@ -1,4 +1,5 @@
- 
+import { NotificationModule } from './modules/notification/notification.module';
+
 import { ChatModule } from './modules/chat/chat.module';
 import { CouncilModule } from './modules/council/council.module';
 import { MailSenderModule } from './modules/mail-sender/mailsender.module';
@@ -13,7 +14,12 @@ import { MilestoneModule } from './modules/milestone/milestone.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { ClassModule } from './modules/class/class.module';
 
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
@@ -26,6 +32,7 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
 
 @Module({
   imports: [
+    NotificationModule,
     ChatModule,
     CouncilModule,
     MailSenderModule,
@@ -60,21 +67,21 @@ export class AppModule implements NestModule {
       .exclude(
         { path: 'api/thesis*', method: RequestMethod.GET },
         { path: 'api/login*', method: RequestMethod.ALL },
-        { path: 'api/majors', method: RequestMethod.GET }
+        { path: 'api/majors', method: RequestMethod.GET },
       )
       .forRoutes(
-        {path: 'api/topic*', method: RequestMethod.ALL},
-        {path: 'api/milestone*', method: RequestMethod.ALL},
-        {path: 'api/comment*', method: RequestMethod.ALL},
-        {path: 'api/class*', method: RequestMethod.ALL},
-        {path: 'api/user*', method: RequestMethod.ALL},
-        {path: 'api/council*', method: RequestMethod.ALL},
-        {path: 'api/post*', method: RequestMethod.ALL},
-        {path: 'api/pending-class*', method: RequestMethod.ALL},
-        {path: 'api/thesis-version*', method: RequestMethod.ALL},
-        {path: 'api/mail-sender*', method: RequestMethod.ALL},
-        {path: 'api/docs*', method: RequestMethod.ALL},
-        {path: 'api/chat*', method: RequestMethod.ALL}, 
+        { path: 'api/topic*', method: RequestMethod.ALL },
+        { path: 'api/milestone*', method: RequestMethod.ALL },
+        { path: 'api/comment*', method: RequestMethod.ALL },
+        { path: 'api/class*', method: RequestMethod.ALL },
+        { path: 'api/user*', method: RequestMethod.ALL },
+        { path: 'api/council*', method: RequestMethod.ALL },
+        { path: 'api/post*', method: RequestMethod.ALL },
+        { path: 'api/pending-class*', method: RequestMethod.ALL },
+        { path: 'api/thesis-version*', method: RequestMethod.ALL },
+        { path: 'api/mail-sender*', method: RequestMethod.ALL },
+        { path: 'api/docs*', method: RequestMethod.ALL },
+        { path: 'api/chat*', method: RequestMethod.ALL },
       );
   }
 }
