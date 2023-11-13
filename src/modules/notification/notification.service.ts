@@ -47,4 +47,8 @@ export class NotificationService {
             
         }
     }
+
+    async deleteNotification(id: string): Promise<any> {
+        return await this.notificationModel.findByIdAndDelete(id);
+    }
 }

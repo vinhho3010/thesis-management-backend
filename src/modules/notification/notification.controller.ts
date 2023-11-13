@@ -36,4 +36,11 @@ export class NotificationController {
     ) {
         return await this.notificationService.updateNotification(id, notification);
     }
+
+    @Delete(':id')
+    async deleteNotification(
+        @Param('id') id: string
+    ) {
+        return await this.notificationService.deleteNotification(id);
+    }
 }
