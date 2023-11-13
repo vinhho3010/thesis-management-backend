@@ -2,13 +2,14 @@ import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, OnGat
 import { log } from 'console';
 import { Message } from 'src/schemas/message.schema';
 import { ChatService } from './chat.service';
-import { JwtService } from '@nestjs/jwt';
+import { Notification } from 'src/schemas/notification.schema';
+import { NotificationService } from '../notification/notification.service';
 
 
 @WebSocketGateway({cors: {origin: '*'}})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
     private userToSocketMap: any[] = []
-    constructor(private chatService: ChatService, private jwtService: JwtService,) {}
+    constructor(private chatService: ChatService, private notificationService: NotificationService) {}
 
     @WebSocketServer()
     server: any;
@@ -17,11 +18,20 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     async handleEvent(@MessageBody() message: Message) {
         const storedMessage = await this.chatService.sendMessage(message);
         const connectedClient = this.userToSocketMap.find((item) => item.userId === message.to);
-        log(message)
         if (connectedClient) {
-
             this.server.to(connectedClient.socketId).emit('newMessage', storedMessage);
             log(`Message sent to ${message.to}`);
+        }
+    }
+
+    @SubscribeMessage('sendNotification')
+    async handleNotification(@MessageBody() notification: Notification) {
+        log(notification);
+        const storedNotification = await this.notificationService.newNotification(notification);
+        const connectedClient = this.userToSocketMap.find((item) => item.userId === notification.to);
+        if (connectedClient) {
+            this.server.to(connectedClient.socketId).emit('newNotification', storedNotification);
+            log(`Notification sent to ${notification.to}`);
         }
     }
 

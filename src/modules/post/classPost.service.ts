@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { log } from 'console';
 import { Model } from 'mongoose';
+import { Class, ClassDocument } from 'src/schemas/class.schema';
 import { ClassPost, ClassPostDocument } from 'src/schemas/classPost.schema';
 import { Comment, CommentDocument } from 'src/schemas/comment.schema';
+import { MailSenderService } from '../mail-sender/mailsender.service';
 
 @Injectable()
 export class ClassPostService {
@@ -12,6 +14,9 @@ export class ClassPostService {
     private readonly postModel: Model<ClassPostDocument>,
     @InjectModel(Comment.name)
     private readonly commentModel: Model<CommentDocument>,
+    @InjectModel(Class.name)
+    private readonly classModel: Model<ClassDocument>,
+    private readonly mailSenderService: MailSenderService
   ) {}
 
   //crud for post
