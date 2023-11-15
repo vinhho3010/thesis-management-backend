@@ -8,6 +8,7 @@ import { User, UserSchema } from 'src/schemas/user.schema';
 import { PendingClassList, PendingClassListSchema } from 'src/schemas/pending-class.schema';
 import { Thesis, ThesisSchema } from 'src/schemas/thesis.schema';
 import { Milestone, MilestoneSchema } from 'src/schemas/milestone.schema';
+import { ThesisVersion, ThesisVersionSchema } from 'src/schemas/thesis-version.schema';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { Milestone, MilestoneSchema } from 'src/schemas/milestone.schema';
       { name: User.name, schema: UserSchema },
       {name: PendingClassList.name, schema: PendingClassListSchema},
       {name: Thesis.name, schema: ThesisSchema},
-      {name: Milestone.name, schema: MilestoneSchema}
+      {name: Milestone.name, schema: MilestoneSchema},
+      {name: ThesisVersion.name, schema: ThesisVersionSchema}
     ]),
   ],
   controllers: [ClassController],

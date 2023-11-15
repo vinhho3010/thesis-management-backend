@@ -8,6 +8,7 @@ import { ThesisStatus } from 'src/enums/thesis-status.enum';
 import { Class, ClassDocument } from 'src/schemas/class.schema';
 import { Milestone, MilestoneDocument } from 'src/schemas/milestone.schema';
 import { PendingClassList, PendingClassListDocument } from 'src/schemas/pending-class.schema';
+import { ThesisVersion, ThesisVersionDocument } from 'src/schemas/thesis-version.schema';
 import { Thesis, ThesisDocument } from 'src/schemas/thesis.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
 
@@ -20,6 +21,7 @@ export class ClassService {
     @InjectModel(Thesis.name) private readonly thesisModel: Model<ThesisDocument>,
     @InjectModel(Milestone.name) private readonly milestoneModel: Model<MilestoneDocument>,
     private configService: ConfigService,
+    @InjectModel(ThesisVersion.name) private readonly thesisVersionModel: Model<ThesisVersionDocument>,
   ) {}
 
   async findAllDetail(page: number, limit: number, majorId: string, schoolYear: string, semester: string): Promise<any> {
@@ -232,8 +234,11 @@ export class ClassService {
     try {
       await this.pendingClassModel.deleteMany({ student: studentId, class: classId });
       await this.userModel.findByIdAndUpdate(studentId, { $unset: { followClass: classId } });
+      await this.milestoneModel.updateMany({ student: studentId, class: classId }, { $unset: { student: studentId } });
+      const studentThesis = await this.thesisModel.findOne({ student: studentId, class: classId });
+      await this.thesisVersionModel.deleteMany({ student: studentId, thesis: studentThesis?._id });
       await this.thesisModel.deleteMany({ student: studentId, class: classId });
-      return await  this.classModel.findByIdAndUpdate(
+      return await this.classModel.findByIdAndUpdate(
         classId,
         { $pull: { student: studentId } },
         { new: true },
