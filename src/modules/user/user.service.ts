@@ -120,4 +120,33 @@ export class UserService {
       );
     }
   }
+
+  async countEachAccountByRole(semester?: string, schoolYear?: string) {
+    const query = {}
+    if(semester) {
+      query['semester'] = semester
+    }
+    if(schoolYear) {
+      query['schoolYear'] = schoolYear
+    }
+    return {
+      student: await this.userModel.countDocuments({ role: RoleEnum.STUDENT, ...query }),
+      teacher: await this.userModel.countDocuments({ role: RoleEnum.TEACHER, ...query }),
+      admin: await this.userModel.countDocuments({ role: RoleEnum.ADMIN, ...query }),
+      ministry: await this.userModel.countDocuments({role: RoleEnum.MINISTRY, ...query})
+    }
+  }
+
+  async countAccount(semester?: string, schoolYear?: string) {
+    const query = {
+      role: {$ne: RoleEnum.ADMIN}
+    }
+    if(semester) {
+      query['semester'] = semester
+    }
+    if(schoolYear) {
+      query['schoolYear'] = schoolYear
+    }
+    return await this.userModel.countDocuments({ ...query })
+  }
 }

@@ -75,4 +75,20 @@ export class UserController {
   ): Promise<User[]> {
     return this.userService.findAllTeacherHasClassByMajor(majorId);
   }
+
+  @Get('/statistic/per-role')
+  getStatistic(
+    @Query('semester') semester: string,
+    @Query('schoolYear') schoolYear: string,
+  ): Promise<any> {
+    return this.userService.countEachAccountByRole(semester, schoolYear);
+  }
+
+  @Get('/statistic/count')
+  getStatisticPerMajor(
+    @Query('semester') semester: string,
+    @Query('schoolYear') schoolYear: string,
+  ): Promise<any> {
+    return this.userService.countAccount(semester, schoolYear);
+  }
 }
