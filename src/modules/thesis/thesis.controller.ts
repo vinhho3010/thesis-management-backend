@@ -42,4 +42,30 @@ export class ThesisController {
         return this.thesisService.getAllThesis( page, limit, semester, schoolYear, majorId, isPublic, ThesisStatus.COMPLETED);
     }
 
+    @Get('/statistic')
+    async getThesisStatistic(
+        @Query('semester') semester: string,
+        @Query('schoolYear') schoolYear: string,
+    )
+    {
+        return this.thesisService.countThesis(semester, schoolYear);
+    }
+
+    @Get('/statistic/major')
+    async getThesisStatisticByMajor(
+        @Query('semester') semester: string,
+        @Query('schoolYear') schoolYear: string,
+    )
+    {
+        return this.thesisService.countAllThesisByMajor(semester, schoolYear);
+    }
+
+    @Get('/statistic/schoolYear')
+    async getThesisStatisticBySemester(
+        @Query('schoolYear') schoolYear: string,
+    )
+    {
+        return this.thesisService.countThesisBySchoolyear(schoolYear);
+    }
+
 }
