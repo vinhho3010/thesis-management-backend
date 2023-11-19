@@ -1,5 +1,5 @@
 services:
-  - name: your-nestjs-app
+  - name: ctu-tms-api
     env: node
     buildCommand: npm run build
     startCommand: npm run start
