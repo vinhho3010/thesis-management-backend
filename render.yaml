@@ -1,0 +1,6 @@
+services:
+  - name: your-nestjs-app
+    env: node
+    buildCommand: npm run build
+    startCommand: npm run start
+    buildDir: /dist
