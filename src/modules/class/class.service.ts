@@ -89,7 +89,14 @@ export class ClassService {
     const classDetail = await this.classModel
       .findById(id)
       .populate('teacher', 'fullName email avatar')
-      .populate('student', 'fullName email code class avatar');
+      .populate({
+        path: 'student',
+        select: 'fullName code email class avatar',
+        populate: {
+          path: 'major',
+          select: 'name',
+        }
+      });
     
     if (!classDetail) {
       throw new HttpException('Không tìm thấy lớp', 404);
@@ -221,7 +228,7 @@ export class ClassService {
       class: classId,
       status: PendingStatus.APPROVED,
       type: 'Chưa có',
-      topic: 'Thêm bởi giáo vụ',
+      topic: 'Chưa có',
       topicEng: 'Not yet registered',
       semester: this.configService.get('SEMESTER'),
       schoolYear: this.configService.get('SCHOOLYEAR'),
