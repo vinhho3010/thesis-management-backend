@@ -6,6 +6,9 @@ import { Class, ClassDocument } from 'src/schemas/class.schema';
 import { ClassPost, ClassPostDocument } from 'src/schemas/classPost.schema';
 import { Comment, CommentDocument } from 'src/schemas/comment.schema';
 import { MailSenderService } from '../mail-sender/mailsender.service';
+import { MailSenderDto } from 'src/dtos/mail-sender/mail-sender';
+import { User } from 'src/schemas/user.schema';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ClassPostService {
@@ -16,13 +19,22 @@ export class ClassPostService {
     private readonly commentModel: Model<CommentDocument>,
     @InjectModel(Class.name)
     private readonly classModel: Model<ClassDocument>,
-    private readonly mailSenderService: MailSenderService
+    private readonly mailSenderService: MailSenderService,
+    private readonly configService: ConfigService
   ) {}
 
   //crud for post
   //create post
   async createPost(data: any): Promise<ClassPost> {
+    
+    const classData = await this.classModel.findById(data.class).populate('student teacher');
+    if(classData.student) {
+      this.mailSenderService.informNewPost(
+        this.buildMailSenderContext(classData.student, classData.teacher)
+      )
+    }
     return await this.postModel.create(data);
+
   }
 
   async updatePost(id: string, data: any): Promise<ClassPost> {
@@ -77,5 +89,16 @@ export class ClassPostService {
       },
       { new: true },
     );
+  }
+
+  buildMailSenderContext(studentList: User[], teacher: User) : MailSenderDto {
+    return {
+      to: studentList.map(student => student.email),
+      context: {
+        teacher: teacher.fullName,
+        url: `${this.configService.get('CLIENT_URL')}/class`
+      }
+
+    }
   }
 }

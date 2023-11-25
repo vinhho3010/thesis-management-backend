@@ -83,4 +83,22 @@ export class MailSenderService {
     console.log(`Mail sent to ${data.to}`);
     return 'Mail sent'
   }
-}
+
+  async informNewPost(data: MailSenderDto) {
+    if(Array.isArray(data.to)) {
+      data.to = data.to.join(', ');
+    }
+    const context = {
+      teacher: data.context.teacher,
+      url: data.context.url,
+    }
+    await this.mailerService.sendMail({
+      to: data.to,
+      subject: 'Thông báo mới - Hệ thống quản lý luận văn',
+      template: './newPost',
+      context: context,
+    });
+    console.log(`Mail sent to ${data.to}`);
+    return 'Mail sent'
+  }
+} 
