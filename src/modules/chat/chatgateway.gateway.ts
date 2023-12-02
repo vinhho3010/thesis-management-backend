@@ -42,11 +42,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
             this.userToSocketMap.push({userId, socketId: client.id});
         }
         log(`Client connected: ${client.id}`);
+        log('Remaining clients: ', this.userToSocketMap.length, this.userToSocketMap);
     }
 
     handleDisconnect(client: any) {
         this.userToSocketMap = this.userToSocketMap.filter((item) => item.socketId !== client.id);
         console.log(`Client disconnected: ${client.id}`);
+        console.log('Remaining clients: ', this.userToSocketMap.length, this.userToSocketMap);
+        
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

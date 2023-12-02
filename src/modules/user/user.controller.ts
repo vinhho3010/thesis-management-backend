@@ -91,4 +91,15 @@ export class UserController {
   ): Promise<any> {
     return this.userService.countAccount(semester, schoolYear);
   }
+
+  @Get('/search/info')
+  search(
+    @Query('value') value: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('role') role: string,
+  ): Promise<any> {
+    return this.userService.searchUser(value, page, limit, role);
+  }
+
 }

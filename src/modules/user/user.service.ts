@@ -149,4 +149,36 @@ export class UserService {
     }
     return await this.userModel.countDocuments({ ...query })
   }
+
+  async searchUser(value: any, page: number, limit: number, role: string){
+    const userData = await this.userModel
+      .find({
+        role: role,
+        $or: [
+          { fullName: { $regex: value, $options: 'i' } },
+          { email: { $regex: value, $options: 'i' } },
+          { code: { $regex: value, $options: 'i' } },
+        ]
+      })
+      .populate('major')
+      .skip(page * limit)
+      .limit(limit)
+      .exec();
+
+    const total = await this.userModel.countDocuments({
+      role: role,
+        $or: [
+          { fullName: { $regex: value, $options: 'i' } },
+          { email: { $regex: value, $options: 'i' } },
+          { code: { $regex: value, $options: 'i' } },
+        ]
+    });
+    return {
+      data: userData,
+      length: total,
+      page: page,
+      limit: limit,
+    };
+
+  }
 }

@@ -102,7 +102,7 @@ export class ThesisVersionService {
       const withMilestone = await thesisVersionWithNewComment.populate('milestone', 'title');
       const newComment = await comment.populate('user', 'fullName email role avatar');
 
-      if (withStudentInfo && withMilestone && newComment && newComment.user.role === RoleEnum.TEACHER) {
+      if (withStudentInfo && withMilestone && newComment && newComment.user.role === RoleEnum.TEACHER && commentDto?.isSendMail) {
         this.mailSenderService.informNewCommentThesis(this.buildAddCommentContext(withMilestone, withStudentInfo, newComment));
       }
       

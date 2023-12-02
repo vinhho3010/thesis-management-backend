@@ -28,7 +28,7 @@ export class ClassPostService {
   async createPost(data: any): Promise<ClassPost> {
     
     const classData = await this.classModel.findById(data.class).populate('student teacher');
-    if(classData.student) {
+    if(classData.student && data?.isSendMail) {
       this.mailSenderService.informNewPost(
         this.buildMailSenderContext(classData.student, classData.teacher)
       )
