@@ -151,7 +151,10 @@ export class UserService {
   }
 
   async searchUser(value: any, page: number, limit: number, role: string){
-    const userData = await this.userModel
+    let userData = [];
+    let total = 0;
+    if(value) {
+      userData = await this.userModel
       .find({
         role: role,
         $or: [
@@ -165,7 +168,7 @@ export class UserService {
       .limit(limit)
       .exec();
 
-    const total = await this.userModel.countDocuments({
+    total = await this.userModel.countDocuments({
       role: role,
         $or: [
           { fullName: { $regex: value, $options: 'i' } },
@@ -173,6 +176,8 @@ export class UserService {
           { code: { $regex: value, $options: 'i' } },
         ]
     });
+    }
+    
     return {
       data: userData,
       length: total,
