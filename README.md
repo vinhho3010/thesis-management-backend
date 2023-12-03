@@ -59,7 +59,7 @@ $ npm run test:cov
 ```
 
 ## Environment variable
-
+```bash
 # .env
 $ MONGO_URI_LOCAL={LocalAddress}
 $ MONGO_URI_CLOUD=mongodb+srv://{UserName}:{Password}@thesis-management.qjmymdx.mongodb.net/
@@ -72,6 +72,7 @@ $ CLIENT_URL={URL_OF_DEPLOYED_FRONTEND}
 $ SMTP_HOST={SMTP_HOST_URL}
 $ MAIL_ACCOUNT={MAIL_ACCOUNT_USE_WITH_SMTP}
 $ MAIL_TOKEN={MAIL_TOKEN}
+```
 
 
 
