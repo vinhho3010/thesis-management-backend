@@ -138,12 +138,12 @@ export class ThesisService {
         select: 'name',
         populate: {
           path: 'teacher',
-          select: 'fullName email major avatar',
+          select: 'fullName email major avatar code',
         },
       })
       .populate({
         path: 'student',
-        select: 'fullName major email',
+        select: 'fullName major email code avatar',
         populate: {
           path: 'major',
           select: 'name',
