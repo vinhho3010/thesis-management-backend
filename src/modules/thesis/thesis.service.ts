@@ -27,8 +27,8 @@ export class ThesisService {
     if (student) {
       const studentThesis = await this.ThesisModel.findOne({
         student: student._id,
-        semester: this.configService.get('SEMESTER'),
-        schoolYear: this.configService.get('SCHOOLYEAR'),
+        // semester: this.configService.get('SEMESTER'),
+        // schoolYear: this.configService.get('SCHOOLYEAR'),
       })
         .populate({
           path: 'class',
@@ -57,8 +57,8 @@ export class ThesisService {
     return await this.ThesisModel.findOneAndUpdate(
       {
         student: studentId,
-        semester: this.configService.get('SEMESTER'),
-        schoolYear: this.configService.get('SCHOOLYEAR'),
+        // semester: this.configService.get('SEMESTER'),
+        // schoolYear: this.configService.get('SCHOOLYEAR'),
       },
       thesisDto,
       { new: true },

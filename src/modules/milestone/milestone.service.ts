@@ -41,12 +41,12 @@ export class MilestoneService {
         path: 'thesisVersionList',
         populate: [{
           path: 'student',
-          select: 'fullName email avatar',
+          select: 'fullName email avatar code',
         },{
           path: 'comments',
           populate: {
             path: 'user',
-            select: 'fullName email avatar',
+            select: 'fullName email avatar code',
           },
           options: {
             sort: { createdAt: -1 } // Sort comments by createdAt field in ascending order.
