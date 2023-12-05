@@ -223,6 +223,10 @@ export class CouncilService {
         select: 'name',
       })
       .populate({
+        path: 'thesisList',
+        select: 'name student topic topicEng status protectInfo class url',
+      })
+      .populate({
         path: 'president',
         select: 'fullName email avatar',
       })
